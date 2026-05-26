@@ -12,9 +12,20 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// const requireAuth = (req, res, next) => {
+//     const token = req.cookies.jwt;
+    
+//     if (!token) {
+//         return res.redirect('/login');
+//     }
+    
+//     next();
+// };
+
 app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); // Needed for Cognito x-www-form-urlencoded payloads
-app.use(cookieParser()); // Needed to extract the JWT from the browser cookie
+app.use(express.urlencoded({ extended: true })); 
+app.use(cookieParser());
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -22,8 +33,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-    res.render('index'); 
-});
+    res.render('index', {
+        user: "Ashwin",
+        workspaces: ["Infosys", "UST Global", "TCS"],
+        pending: [0, 1, 20000]
+    }); 
+});      
 
 app.listen(PORT, () => {
     console.log(`node server running on http://localhost:${PORT}`);

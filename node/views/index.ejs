@@ -1,6 +1,15 @@
-<%- include("header.ejs") %>
-</head>
-<body>
-    
-</body>
-</html>
+<%- include("header.ejs", {style:"index", user:user, heading:"WORKSPACES"}) %>
+
+<ol class="list-group container">
+    <% for (let i = 0; i < workspaces.length; i++) { %>
+        <li class="list-group-item items">
+            <p class="company-name"><%= `${i+1}.   ` + workspaces[i] %></p>
+            <div>
+                <span class="badge text-bg-primary rounded-pill"><%if (pending[i]) {%> <%= pending[i] %> <% } %></span>
+                <button type="button" class="btn"><i class="fa-solid fa-pen-to-square"></i></button>
+            </div>
+        </li>
+    <% } %>
+</ol>
+
+<%- include("footer.ejs", {script:"index"}) %> 
