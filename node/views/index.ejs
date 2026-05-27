@@ -1,4 +1,26 @@
-<%- include("header.ejs", {style:"index", user:user, heading:"WORKSPACES"}) %>
+<%- include("header.ejs", {style:"index", firstName:firstName, heading:"WORKSPACES"}) %>
+
+<div class="overlay"></div>
+
+<div class="workspace-edit-menu">
+    <i class="fa-regular fa-circle-xmark close-forms"></i>
+    <form class="update-name-form">
+    <div class="mb-3">
+        <label for="updateName" class="form-label">Update Name</label>
+        <input type="email" class="form-control" id="updateName">
+    </div>
+    <button type="submit" class="btn btn-info">Submit</button>
+    </form>
+    
+    <form>
+    <div class="mb-3">
+        <label for="deleteWorkspace" class="form-label">Delete Workspace</label>
+        <input type="email" class="form-control" id="deleteWorkspace" aria-describedby="deleteHelp">
+        <div id="deleteHelp" class="form-text">type delete, then press delete button for workspace deletion</div>
+    </div>
+    <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</div>
 
 <ol class="list-group container">
     <% for (let i = 0; i < workspaces.length; i++) { %>
@@ -6,7 +28,7 @@
             <p class="company-name"><%= `${i+1}.   ` + workspaces[i] %></p>
             <div>
                 <span class="badge text-bg-primary rounded-pill"><%if (pending[i]) {%> <%= pending[i] %> <% } %></span>
-                <button type="button" class="btn"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button type="button" class="btn edit-btn"><i class="fa-solid fa-pen-to-square edit-icon"></i></button>
             </div>
         </li>
     <% } %>

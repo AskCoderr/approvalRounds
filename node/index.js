@@ -34,9 +34,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
     res.render('index', {
-        user: "Ashwin",
-        workspaces: ["Infosys", "UST Global", "TCS"],
-        pending: [0, 1, 20000]
+        firstName: "Ashwin",
+        lastName: "S Krishna",
+        email: "askaskaskask@gmail.com",
+        workspaces: ["Infosys", "UST Global", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS", "TCS"],
+        pending: [0, 1, 20000, 1, 4, 0, 0, 0, 5, 0, 20000, 1, 4, 0, 0, 0, 5, 0]
     }); 
 });      
 
