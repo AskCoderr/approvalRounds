@@ -1,4 +1,14 @@
-<%- include("header.ejs", {style:"index", firstName:firstName, heading:"WORKSPACES"}) %>
+<%- include("header.ejs", {style:"index"}) %>
+
+<div class="nav">
+    <h1 class="heading">WORKSPACES</h1>
+    <p class="first-name"><%= firstName %></p>
+    <div class="account-info">
+        <p class="full-name"><%= firstName + ' ' + lastName %></p>
+        <p><%= email %></p>
+        <button type="button" class="btn btn-danger">Log Out</button>
+    </div>
+</div>
 
 <div class="overlay"></div>
 
