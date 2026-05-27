@@ -63,3 +63,23 @@
 .close-forms:hover {
     transform: scale(1.5);
 }
+
+.add-workspace-button {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background-color: #393E46;
+    font-size: 2rem;
+    border: 3px dashed #EEEEEE;
+    color: #EEEEEE;
+    text-align: center;
+    transition: font-size 0.1s ease;
+}
+
+.add-workspace-button:hover {
+    font-size: 2.5rem;
+}
+.plus-icon {
+    position: relative;
+    top: 0.25rem;
+}
