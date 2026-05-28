@@ -1,5 +1,25 @@
 <%- include("header.ejs", {style:"workspace"}) %>
 
-
+<ul class="list-group container">
+  <% pendingApprovals.forEach((approval) => { %>
+    <li class="list-group-item items">
+      
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1"><%= approval.title %></h5>
+        
+        <small class="text-body-secondary">
+          <%= approval.timeAgo%>
+        </small>
+      </div>
+      
+      <p class="mb-1"><%= approval.subject %></p>
+      
+      <small class="text-body-secondary">
+        Initiated by: <%= approval.createdBy %>
+      </small>
+      
+    </li>
+  <% }) %>
+</ul>
 
 <%- include("footer.ejs", {script:"workspace"}) %> 

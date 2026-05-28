@@ -1,3 +1,20 @@
 .edit-navbar {
     background-color: #222831;
 }
+
+.container {
+    margin: 5vh auto;
+    padding-right: 0;
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #222831 #EEEEEE;
+}
+
+.items {
+    background-color: #EEEEEE;
+}
+
+.items:hover {
+    background-color: #00ADB5;
+}
