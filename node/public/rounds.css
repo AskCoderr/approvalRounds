@@ -1,20 +1,3 @@
-.container {
-    margin: 7vh auto;
-    padding-right: 0;
-    max-height: 80vh;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #222831 #EEEEEE; 
-}
-
-.items {
-    background-color: #EEEEEE;
-}
-
-.items:hover {
-    background-color: #00ADB5;
-}
-
 .overlay {
     display: none;
     position: fixed;
@@ -55,7 +38,7 @@
     transform: scale(1.5);
 }
 
-.subject{
+.subject {
     font-size: 1.1rem;
     margin: 0;
 }
@@ -108,7 +91,7 @@
 
 .post-button {
     position: relative;
-    left:100%;
+    left: 100%;
     transform: translateX(-100%);
     margin-bottom: 2vh;
     background-color: #00ADB5;
@@ -133,4 +116,76 @@
 .author {
     font-size: 0.9rem;
     text-align: end;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    width: 90vw;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.filter {
+    margin: 10px;
+}
+
+.select-radios {
+    color: white;
+    border-color: white;
+    height: 3vh;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.btn-check:checked+.select-radios {
+    background-color: white;
+    color: black;
+    border-color: white;
+}
+
+.container {
+    margin: 7vh auto;
+    padding-right: 0;
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #222831 #EEEEEE;
+}
+
+.add-workspace-button {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background-color: #393E46;
+    font-size: 2rem;
+    border: 3px dashed #EEEEEE;
+    color: #EEEEEE;
+    text-align: center;
+    transition: font-size 0.1s ease;
+}
+
+.add-workspace-button:hover {
+    font-size: 2.5rem;
+}
+
+.items {
+    background-color: #EEEEEE;
+}
+
+.items:hover {
+    background-color: #00ADB5;
+}
+
+.item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.view-approval-button {
+    transform: scale(0.9);
+    border-radius: 10px;
 }

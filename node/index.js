@@ -46,93 +46,83 @@ app.get('/workspace', (req, res) => {
     const pendingApprovals = [
         {
             id: "appr-001",
-            workspace: "Engineering Logistics",
+            title: "Engineering Logistics",
             subject: "Procure High-Speed Camera Lenses",
-            requestedBy: "Anand Narayan",
+            author: "Anand Narayan",
             date: "2026-05-26",
-            timeAgo: "2 hours ago",
-            status: "Pending"
+            timeAgo: "2 hours ago"
         },
         {
             id: "appr-002",
-            workspace: "Infrastructure & Cloud",
+            title: "Infrastructure & Cloud",
             subject: "Approve AWS VPC Terraform Deployment",
-            requestedBy: "Meera Nair",
+            author: "Meera Nair",
             date: "2026-05-26",
-            timeAgo: "4 hours ago",
-            status: "Pending"
+            timeAgo: "4 hours ago"
         },
         {
             id: "appr-003",
-            workspace: "Field Trials",
+            title: "Field Trials",
             subject: "Budget Approval for ESP32 Deterrent Nodes",
-            requestedBy: "Siddharth Kumar",
+            author: "Siddharth Kumar",
             date: "2026-05-25",
-            timeAgo: "1 day ago",
-            status: "Pending"
+            timeAgo: "1 day ago"
         },
         {
             id: "appr-004",
-            workspace: "Computer Vision Lab",
+            title: "Computer Vision Lab",
             subject: "Camera2 API Framework Integration Baseline",
-            requestedBy: "Gautham Das",
+            author: "Gautham Das",
             date: "2026-05-25",
-            timeAgo: "1 day ago",
-            status: "Pending"
+            timeAgo: "1 day ago"
         },
         {
             id: "appr-005",
-            workspace: "Engineering Logistics",
+            title: "Engineering Logistics",
             subject: "Roland Go Keys 3 Hardware Procurement",
-            requestedBy: "Rohan Sharma",
+            author: "Rohan Sharma",
             date: "2026-05-24",
-            timeAgo: "2 days ago",
-            status: "Pending"
+            timeAgo: "2 days ago"
         },
         {
             id: "appr-006",
-            workspace: "Infrastructure & Cloud",
+            title: "Infrastructure & Cloud",
             subject: "Modify Subnet NACL Inbound Rules",
-            requestedBy: "Deepa Ramachandran",
+            author: "Deepa Ramachandran",
             date: "2026-05-24",
-            timeAgo: "2 days ago",
-            status: "Pending"
+            timeAgo: "2 days ago"
         },
         {
             id: "appr-007",
-            workspace: "Research & DIP",
+            title: "Research & DIP",
             subject: "Malpractice Detection Dataset Acquisition",
-            requestedBy: "Dr. Lakshmi Prasad",
+            author: "Dr. Lakshmi Prasad",
             date: "2026-05-23",
-            timeAgo: "3 days ago",
-            status: "Pending"
+            timeAgo: "3 days ago"
         },
         {
             id: "appr-008",
-            workspace: "Field Trials",
+            title: "Field Trials",
             subject: "Ulayur Site Sensor Deployment Schedule",
-            requestedBy: "Vignesh Prabhu",
+            author: "Vignesh Prabhu",
             date: "2026-05-22",
-            timeAgo: "4 days ago",
-            status: "Pending"
+            timeAgo: "4 days ago"
         },
         {
             id: "appr-009",
-            workspace: "Computer Vision Lab",
+            title: "Computer Vision Lab",
             subject: "Cricket Seam Tracking Calibration Assets",
-            requestedBy: "Arjun Madhav",
+            author: "Arjun Madhav",
             date: "2026-05-21",
-            timeAgo: "5 days ago",
-            status: "Pending"
+            timeAgo: "5 days ago"
         },
         {
             id: "appr-010",
-            workspace: "Core Infrastructure",
+            title: "Core Infrastructure",
             subject: "System Stability Feature Freeze Sign-off",
-            requestedBy: "Hari Krishnan",
+            author: "Hari Krishnan",
             date: "2026-05-20",
-            timeAgo: "6 days ago",
-            status: "Pending"
+            timeAgo: "6 days ago"
         }
     ];
 
@@ -173,6 +163,34 @@ app.get('/workspace/:id', (req, res) => {
     };
 
     res.json(approvalData);
+})
+
+app.get('/rounds', (req, res) => {
+    const approvalRounds = [
+    { id: 1, name: "Engineering Procurement Request", author: "You", status: "pending", createdAt: "2026-05-28" },
+    { id: 2, name: "Marketing Budget Allocation Q2", author: "Sarah Mitchell", status: "approved", createdAt: "2026-05-27" },
+    { id: 3, name: "Cloud Infrastructure Upgrade", author: "You", status: "approved", createdAt: "2026-05-25" },
+    { id: 4, name: "New Vendor Onboarding - TechSupply Co.", author: "Rahul Menon", status: "pending", createdAt: "2026-05-24" },
+    { id: 5, name: "Office Renovation Phase 2", author: "You", status: "pending", createdAt: "2026-05-22" },
+    { id: 6, name: "HR Policy Amendment - Remote Work", author: "Priya Nair", status: "approved", createdAt: "2026-05-20" },
+    { id: 7, name: "Software License Renewal - Adobe Suite", author: "James Carter", status: "rejected", createdAt: "2026-05-18" },
+    { id: 8, name: "Research Grant Application - AI Division", author: "You", status: "pending", createdAt: "2026-05-17" },
+    { id: 9, name: "Annual Travel Budget Approval", author: "Meera Sharma", status: "approved", createdAt: "2026-05-15" },
+    { id: 10, name: "Cybersecurity Audit Contract", author: "You", status: "approved", createdAt: "2026-05-12" },
+    { id: 11, name: "Product Launch Campaign Funding", author: "Daniel Okafor", status: "pending", createdAt: "2026-05-10" },
+    { id: 12, name: "Equipment Lease - Manufacturing Unit 3", author: "You", status: "pending", createdAt: "2026-05-08" },
+    { id: 13, name: "Legal Retainer Fee Approval", author: "Aisha Fernandez", status: "rejected", createdAt: "2026-05-05" },
+    { id: 14, name: "Intern Hiring Budget - Summer 2026", author: "You", status: "approved", createdAt: "2026-05-03" },
+    { id: 15, name: "Data Center Expansion Proposal", author: "Kevin Tran", status: "pending", createdAt: "2026-05-01" },
+    ]
+
+    res.render('rounds', {
+        firstName: "Ashwin",
+        lastName: "S Krishna",
+        email: "askaskaskask@gmail.com",
+        roles: ['admin'],
+        approvalRounds: approvalRounds
+    });
 })
 
 app.listen(PORT, () => {

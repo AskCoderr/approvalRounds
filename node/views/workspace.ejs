@@ -21,15 +21,20 @@
   </ul>
 
   <h5>Comments</h5>
-  <textarea class="form-control user-comment" placeholder="Write a comment..."></textarea>
-  <button type="button" class="btn post-button">Post</button>
-  <ul>
-    <li class="comment">Please attach the secondary vendor quotation string before final allocation approval.</li>
-    <p class="author text-muted">- James Peter</p>
-    <li class="comment">Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters.</li>
-    <p class="author text-muted">- Meera Nair</p>
-  </ul>
-
+  <div class="comments-div">
+    <textarea class="form-control user-comment" placeholder="Write a comment..."></textarea>
+    <button type="button" class="btn post-button">Post</button>
+    <ul>
+      <li class="comment">Please attach the secondary vendor quotation string before final allocation approval.</li>
+      <p class="author text-muted">- James Peter</p>
+      <li class="comment">Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters.</li>
+      <p class="author text-muted">- Meera Nair</p>
+      <li class="comment">Please attach the secondary vendor quotation string before final allocation approval.</li>
+      <p class="author text-muted">- James Peter</p>
+      <li class="comment">Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters.</li>
+      <p class="author text-muted">- Meera Nair</p>
+    </ul>
+  </div>
   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
     <button type="button" class="btn btn-danger reject-btn" data-bs-toggle="popover">Reject</button>
     <button type="button" class="btn btn-success approve-btn">Approve</button>
@@ -52,11 +57,11 @@
       <p class="mb-1"><%= approval.subject %></p>
       
       <small class="text-body-secondary">
-        Initiated by: <%= approval.createdBy %>
+        Initiated by: <%= approval.author %>
       </small>
       
     </li>
-  <% }) %>
+  <% }); %>
 </ul>
 
 <%- include("footer.ejs", {script:"workspace"}) %> 

@@ -26,11 +26,11 @@
             <a class="nav-link workspaces-link" href="/">Workspaces</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link pending-approval-link" href="#">Pending Approvals</a>
+                <a class="nav-link pending-approval-link" href="/workspace">Pending Approvals</a>
             </li>
             <% if (roles.some(role => ['admin'].includes(role))) {%>
                 <li class="nav-item">
-                    <a class="nav-link approval-rounds-link" href="#">Approval Rounds</a>
+                    <a class="nav-link approval-rounds-link" href="/rounds">Approval Rounds</a>
                 </li>
             <% } %>
             <% if (roles.some(role => ['admin'].includes(role))) {%>

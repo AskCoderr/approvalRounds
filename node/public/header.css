@@ -5,6 +5,11 @@ body {
     font-style: normal;
 }
 
+.edit-navbar {
+    background-color: #222831;
+}
+
+
 .first-name {
     color: #EEEEEE;
     margin: 0;

@@ -58,4 +58,4 @@ document.addEventListener('click', (event) => {
     } else if (event.target.matches('.approve-cancel-btn')) {
         approvePopover.hide();
     }
-})
+});

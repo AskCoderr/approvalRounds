@@ -1,0 +1,103 @@
+<%- include("header.ejs", {style:"rounds"}) %>
+
+<div class="overlay"></div>
+
+
+
+<div class="approval-box">
+  <i class="fa-regular fa-circle-xmark close-forms"></i>
+  <h4>Engineering Procurement Request</h4>
+  <p class="text-muted subject">Subject: Procure High-Speed Camera Lenses for Seam Tracking</p>
+  <p class="text-muted initiated-by">Initiated by: James Jones</p>
+  <div class="underline"></div>
+
+  <div class="body">Requesting budget clearance for the procurement of high-speed optical lenses required for real-time computer vision analysis and cricket ball seam tracking modules.</div>
+
+  <h5>Attachments</h5>
+  <ul class="list-group attachments-container">
+    <li class="list-group-item flex-item">An item.pdf</li>
+    <li class="list-group-item flex-item">A second item.xls</li>
+    <li class="list-group-item flex-item">A third item.png</li>
+    <li class="list-group-item flex-item">A fourth item.pdf</li>
+    <li class="list-group-item flex-item">And a fifth one.pdf</li>
+  </ul>
+
+  <h5>Comments</h5>
+  <div class="comments-div">
+    <textarea class="form-control user-comment" placeholder="Write a comment..."></textarea>
+    <button type="button" class="btn post-button">Post</button>
+    <ul>
+      <li class="comment">Please attach the secondary vendor quotation string before final allocation approval.</li>
+      <p class="author text-muted">- James Peter</p>
+      <li class="comment">Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters.</li>
+      <p class="author text-muted">- Meera Nair</p>
+      <li class="comment">Please attach the secondary vendor quotation string before final allocation approval.</li>
+      <p class="author text-muted">- James Peter</p>
+      <li class="comment">Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters.</li>
+      <p class="author text-muted">- Meera Nair</p>
+    </ul>
+  </div>
+
+</div>
+
+<div class="toolbar">
+    <div class="filter btn-group">
+        <input type="radio" class="btn-check" name="filter1" id="all1" autocomplete="off" checked>
+        <label class="btn select-radios" for="all1">All</label>
+        
+        <input type="radio" class="btn-check" name="filter1" id="yours" autocomplete="off">
+        <label class="btn select-radios" for="yours">Yours</label>
+        
+        <input type="radio" class="btn-check" name="filter1" id="others" autocomplete="off">
+        <label class="btn select-radios" for="others">Others</label>
+    </div>
+
+    <div class="filter btn-group">
+        <input type="radio" class="btn-check" name="filter2" id="all2" autocomplete="off" checked>
+        <label class="btn select-radios" for="all2">All</label>
+        
+        <input type="radio" class="btn-check" name="filter2" id="approved" autocomplete="off">
+        <label class="btn select-radios" for="approved">Approved</label>
+        
+        <input type="radio" class="btn-check" name="filter2" id="pending" autocomplete="off">
+        <label class="btn select-radios" for="pending">Pending</label>
+
+        <input type="radio" class="btn-check" name="filter2" id="rejected" autocomplete="off">
+        <label class="btn select-radios" for="rejected">Rejected</label>
+    </div>
+</div>
+
+<ul class="list-group container">
+  <li class="list-group-item add-workspace-button"><i class="fa-solid fa-plus plus-icon"></i></li>
+  <% approvalRounds.forEach((round) => { %>
+    <li class="list-group-item items" data-round-id="<%= round.id %>">
+      
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1"><%= round.name %></h5>
+        
+        <small class="text-body-secondary">
+          <%= round.createdAt %>
+        </small>
+      </div>
+      
+      <p class="mb-1">
+        <% if (round.status === 'approved') { %>
+            <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2 fw-semibold">Approved</span>
+        <% } else if (round.status === 'pending') { %>
+            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning px-3 py-2 fw-semibold">Pending</span>
+        <% } else if (round.status === 'rejected') { %>
+            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger px-3 py-2 fw-semibold">Rejected</span>
+        <% } %>
+      </p>
+
+      <div class="item-footer">
+        <small class="text-body-secondary">
+            Initiated by: <%= round.author %>
+        </small>
+        <button type="button" class="btn btn-outline-primary btn-sm view-approval-button">View Approval</button>
+      </div>
+    </li>
+  <% }); %>
+</ul>
+
+<%- include("footer.ejs", {script:"rounds"}) %> 
