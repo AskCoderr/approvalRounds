@@ -198,61 +198,60 @@ app.get('/rounds/:id', (req, res) => {
 
     // fetch data from database
 
-    const response ={roundName:'Trial Round', levels:[
-        {status:false, 
+    const response = {roundName:'Trial Round', levels:[
+        {status:'rejected', 
         nodes:[
-            { userName: 'hazel yajn', userMail:'hazelyaa@gmail.com', date: '2026-05-10' },
-            { userName: 'Rohan Mehta', userMail: 'rohanm@gmail.com', date: '2026-05-10' },
-            { userName: 'Priya Nair', userMail: 'priyanair@gmail.com', date: null },
-            { userName: 'James Carter', userMail: 'jamesc@gmail.com', date: null },
-            { userName: 'Aisha Fernandez', userMail: 'aishaf@gmail.com', date: null },
+            { userName: 'hazel yajn', firstName: 'hazel', userMail:'hazelyaa@gmail.com', date: '2026-05-10', status: 'approved' },
+            { userName: 'Rohan Mehta', firstName: 'Rohan', userMail: 'rohanm@gmail.com', date: '2026-05-10', status: 'rejected' },
+            { userName: 'Priya Nair', firstName: 'Priya', userMail: 'priyanair@gmail.com', date: null, status: 'pending' },
+            { userName: 'James Carter', firstName: 'James', userMail: 'jamesc@gmail.com', date: null, status: 'pending' },
+            { userName: 'Aisha Fernandez', firstName: 'Aisha', userMail: 'aishaf@gmail.com', date: null, status: 'pending' },
         ],
         currPos:2},
-        { status: false, 
+        { status: 'pending', 
         nodes: [
-            { userName: 'Liam Torres', userMail: 'liamt@gmail.com', date: '2026-05-10' },
-            { userName: 'Meera Sharma', userMail: 'meeras@gmail.com', date: null },
-            { userName: 'David Okafor', userMail: 'davido@gmail.com', date: null },
+            { userName: 'Liam Torres', firstName: 'Liam', userMail: 'liamt@gmail.com', date: '2026-05-10', status: 'approved' },
+            { userName: 'Meera Sharma', firstName: 'Meera', userMail: 'meeras@gmail.com', date: null, status: 'pending' },
+            { userName: 'David Okafor', firstName: 'David', userMail: 'davido@gmail.com', date: null, status: 'pending' },
         ], 
         currPos: 1 },
 
-        { status: true, 
+        { status: 'approved', 
         nodes: [
-            { userName: 'Sophie Lin', userMail: 'sophiel@gmail.com', date: '2026-05-10' },
-            { userName: 'Kevin Tran', userMail: 'kevint@gmail.com', date: '2026-05-11' },
-            { userName: 'Nina Patel', userMail: 'ninap@gmail.com', date: '2026-05-12' },
+            { userName: 'Sophie Lin', firstName: 'Sophie', userMail: 'sophiel@gmail.com', date: '2026-05-10', status: 'approved' },
+            { userName: 'Kevin Tran', firstName: 'Kevin', userMail: 'kevint@gmail.com', date: '2026-05-11', status: 'approved' },
+            { userName: 'Nina Patel', firstName: 'Nina', userMail: 'ninap@gmail.com', date: '2026-05-12', status: 'approved' },
         ], 
         currPos: null },
 
-        { status: false, 
+        { status: 'rejected', 
         nodes: [
-            { userName: 'Carlos Reyes', userMail: 'carlosr@gmail.com', date: '2026-05-10' },
-            { userName: 'Fatima Al-Hassan', userMail: 'fatimah@gmail.com', date: null },
-            { userName: 'Ethan Brooks', userMail: 'ethanb@gmail.com', date: '2026-05-10' },
-            { userName: 'Yuki Tanaka', userMail: 'yukit@gmail.com', date: null },
+            { userName: 'Carlos Reyes', firstName: 'Carlos', userMail: 'carlosr@gmail.com', date: '2026-05-10', status: 'approved' },
+            { userName: 'Fatima Al-Hassan', firstName: 'Fatima', userMail: 'fatimah@gmail.com', date: null, status: 'pending' },
+            { userName: 'Ethan Brooks', firstName: 'Ethan', userMail: 'ethanb@gmail.com', date: '2026-05-10', status: 'rejected' },
+            { userName: 'Yuki Tanaka', firstName: 'Yuki', userMail: 'yukit@gmail.com', date: null, status: 'pending' },
         ], 
         currPos: null },
 
-        { status: true, 
+        { status: 'rejected', 
         nodes: [
-            { userName: 'Grace Owusu', userMail: 'graceo@gmail.com', date: '2026-04-28' },
-            { userName: 'Marco Bianchi', userMail: 'marcob@gmail.com', date: '2026-04-29' },
+            { userName: 'Grace Owusu', firstName: 'Grace', userMail: 'graceo@gmail.com', date: '2026-04-28', status: 'rejected' },
+            { userName: 'Marco Bianchi', firstName: 'Marco', userMail: 'marcob@gmail.com', date: '2026-04-29', status: 'approved' },
         ], 
         currPos: 2 },
 
-        { status: false, 
+        { status: 'rejected', 
         nodes: [
-            { userName: 'Ananya Krishnan', userMail: 'ananyak@gmail.com', date: '2026-05-10' },
-            { userName: 'Tyler Morgan', userMail: 'tylerm@gmail.com', date: '2026-05-10' },
-            { userName: 'Zara Ahmed', userMail: 'zarae@gmail.com', date: '2026-05-10' },
-            { userName: 'Ben Howell', userMail: 'benh@gmail.com', date: null },
-            { userName: 'Clara Dubois', userMail: 'clarad@gmail.com', date: null },
+            { userName: 'Ananya Krishnan', firstName: 'Ananya', userMail: 'ananyak@gmail.com', date: '2026-05-10', status: 'approved' },
+            { userName: 'Tyler Morgan', firstName: 'Tyler', userMail: 'tylerm@gmail.com', date: '2026-05-10', status: 'approved' },
+            { userName: 'Zara Ahmed', firstName: 'Zara', userMail: 'zarae@gmail.com', date: '2026-05-10', status: 'approved' },
+            { userName: 'Ben Howell', firstName: 'Ben', userMail: 'benh@gmail.com', date: null, status: 'pending' },
+            { userName: 'Clara Dubois', firstName: 'Clara', userMail: 'clarad@gmail.com', date: '2026-05-10', status: 'rejected' },
         ], 
         currPos: 3 }
     ]};
-
     res.json(response);
-})
+});
 
 app.listen(PORT, () => {
     console.log(`node server running on http://localhost:${PORT}`);

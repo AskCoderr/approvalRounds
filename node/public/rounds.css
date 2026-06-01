@@ -1,5 +1,5 @@
 .overlay {
-    display: block;
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -10,7 +10,7 @@
 }
 
 .round-box {
-    display: block;
+    display: none;
     background-color: #EEEEEE;
     position: fixed;
     z-index: 110;
@@ -53,11 +53,7 @@
 }
 
 .level {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    gap: 40px;
-    padding: 10px;
+    padding: 0 15px;
     width: 100%;
     border: 2px solid #00ADB5;
     border-radius: 10px;
@@ -70,10 +66,20 @@
     cursor: pointer;
 }
 
-.node-button {
+.sublevel {
     display: flex;
     justify-content: center;
-    align-items: center;
+    gap: 40px;
+    margin: 15px 0;
+}
+
+.sublevel-reverse {
+    flex-direction: row-reverse;
+}
+
+.node-button {
+    width: 100px;
+    flex-shrink: 0;
 }
 
 .level:has(.node-button:hover) {
