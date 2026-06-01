@@ -163,7 +163,7 @@ app.get('/workspace/:id', (req, res) => {
     };
 
     res.json(approvalData);
-})
+});
 
 app.get('/rounds', (req, res) => {
     const approvalRounds = [
@@ -191,6 +191,67 @@ app.get('/rounds', (req, res) => {
         roles: ['admin'],
         approvalRounds: approvalRounds
     });
+});
+
+app.get('/rounds/:id', (req, res) => {
+    const id = req.params.id;
+
+    // fetch data from database
+
+    const response ={roundName:'Trial Round', levels:[
+        {status:false, 
+        nodes:[
+            { userName: 'hazel yajn', userMail:'hazelyaa@gmail.com', date: '2026-05-10' },
+            { userName: 'Rohan Mehta', userMail: 'rohanm@gmail.com', date: '2026-05-10' },
+            { userName: 'Priya Nair', userMail: 'priyanair@gmail.com', date: null },
+            { userName: 'James Carter', userMail: 'jamesc@gmail.com', date: null },
+            { userName: 'Aisha Fernandez', userMail: 'aishaf@gmail.com', date: null },
+        ],
+        currPos:2},
+        { status: false, 
+        nodes: [
+            { userName: 'Liam Torres', userMail: 'liamt@gmail.com', date: '2026-05-10' },
+            { userName: 'Meera Sharma', userMail: 'meeras@gmail.com', date: null },
+            { userName: 'David Okafor', userMail: 'davido@gmail.com', date: null },
+        ], 
+        currPos: 1 },
+
+        { status: true, 
+        nodes: [
+            { userName: 'Sophie Lin', userMail: 'sophiel@gmail.com', date: '2026-05-10' },
+            { userName: 'Kevin Tran', userMail: 'kevint@gmail.com', date: '2026-05-11' },
+            { userName: 'Nina Patel', userMail: 'ninap@gmail.com', date: '2026-05-12' },
+        ], 
+        currPos: null },
+
+        { status: false, 
+        nodes: [
+            { userName: 'Carlos Reyes', userMail: 'carlosr@gmail.com', date: '2026-05-10' },
+            { userName: 'Fatima Al-Hassan', userMail: 'fatimah@gmail.com', date: null },
+            { userName: 'Ethan Brooks', userMail: 'ethanb@gmail.com', date: '2026-05-10' },
+            { userName: 'Yuki Tanaka', userMail: 'yukit@gmail.com', date: null },
+        ], 
+        currPos: null },
+
+        { status: true, 
+        nodes: [
+            { userName: 'Grace Owusu', userMail: 'graceo@gmail.com', date: '2026-04-28' },
+            { userName: 'Marco Bianchi', userMail: 'marcob@gmail.com', date: '2026-04-29' },
+        ], 
+        currPos: 2 },
+
+        { status: false, 
+        nodes: [
+            { userName: 'Ananya Krishnan', userMail: 'ananyak@gmail.com', date: '2026-05-10' },
+            { userName: 'Tyler Morgan', userMail: 'tylerm@gmail.com', date: '2026-05-10' },
+            { userName: 'Zara Ahmed', userMail: 'zarae@gmail.com', date: '2026-05-10' },
+            { userName: 'Ben Howell', userMail: 'benh@gmail.com', date: null },
+            { userName: 'Clara Dubois', userMail: 'clarad@gmail.com', date: null },
+        ], 
+        currPos: 3 }
+    ]};
+
+    res.json(response);
 })
 
 app.listen(PORT, () => {
