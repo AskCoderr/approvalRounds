@@ -10,6 +10,8 @@ const levelsContainer = document.querySelector('.levels-container');
 
 approvalRoundsLink.classList.add('active');
 
+let numItems = 0, style, paddingLeft, paddingRight, contentWidth, response, newItem, newSublevel, tempButton, totalCount, counter, state, temp, gap;
+
 function getFullWidth(element) {
     const style = window.getComputedStyle(element)
     const marginLeft = parseFloat(style.marginLeft)
@@ -17,10 +19,56 @@ function getFullWidth(element) {
     return element.offsetWidth + marginLeft + marginRight
 }
 
-let numItems = 0, style, paddingLeft, paddingRight, contentWidth, response, newItem, newSublevel, tempButton, totalCount, counter, state, temp;
+function render() {
+    style = window.getComputedStyle(newSublevel);
+    paddingLeft = parseFloat(style.paddingLeft);
+    paddingRight = parseFloat(style.paddingRight);
+    contentWidth = newSublevel.clientWidth - paddingLeft - paddingRight;
+    gap = parseFloat(style.gap);
+    numItems = Math.floor((contentWidth+gap)/(getFullWidth(tempButton)+gap));
+    levelsContainer.innerHTML = '';
+
+    response.data.levels.forEach(elem => {
+        totalCount = elem.nodes.length;
+        state = false;
+        newItem = document.createElement('div');
+        newItem.className = 'level';
+        levelsContainer.appendChild(newItem);
+        temp = 0;
+        while (true) {
+            newSublevel = document.createElement('div');
+            newSublevel.className = 'sublevel';
+
+            if (state) {
+                newSublevel.classList.add('sublevel-reverse');
+            }
+            newItem.appendChild(newSublevel);
+            for (let i = temp; i < numItems+temp; i++) {
+                if (elem.nodes[i].status === 'approved') {
+                    newSublevel.insertAdjacentHTML('beforeend', `<button class="btn btn-success btn-sm node-button text-truncate">${elem.nodes[i].firstName}</button>`);
+                }  else if (elem.nodes[i].status === 'pending') {
+                    newSublevel.insertAdjacentHTML('beforeend', `<button class="btn btn-secondary btn-sm node-button text-truncate">${elem.nodes[i].firstName}</button>`);
+                } else if (elem.nodes[i].status === 'rejected') {
+                    newSublevel.insertAdjacentHTML('beforeend', `<button class="btn btn-danger btn-sm node-button text-truncate">${elem.nodes[i].firstName}</button>`);
+                }
+                totalCount -= 1;
+                if (totalCount === 0) {
+                    break;
+                }
+            }
+            temp += numItems;
+            if (totalCount === 0) {
+                break;
+            }
+            state = !state;
+        }
+    });
+}
 
 window.addEventListener('resize', (event) => {
-    
+    newSublevel = document.querySelector('.sublevel');
+    tempButton = document.querySelector('.node-button');
+    render();
 });
 
 container.addEventListener('click', async (event) => {
@@ -40,55 +88,17 @@ container.addEventListener('click', async (event) => {
             overlay.style.display = 'block';
             roundBox.style.display = 'block';
             newItem = document.createElement('div');
+            newSublevel = document.createElement('div');
             newItem.className = 'level';
+            newSublevel.className = 'sublevel';
             levelsContainer.appendChild(newItem);
-            newItem.insertAdjacentHTML('beforeend', '<button class="btn btn-success btn-sm node-button text-truncate">1234256789</button>');
-            tempButton = newItem.lastElementChild;
+            newItem.appendChild(newSublevel);
+            newSublevel.insertAdjacentHTML('beforeend', '<button class="btn btn-success btn-sm node-button text-truncate">1234256789</button>');
+            tempButton = newSublevel.lastElementChild;
 
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {                    
-                    style = window.getComputedStyle(newItem);
-                    paddingLeft = parseFloat(style.paddingLeft);
-                    paddingRight = parseFloat(style.paddingRight);
-                    contentWidth = newItem.clientWidth - paddingLeft - paddingRight;
-                    numItems = Math.floor(contentWidth/getFullWidth(tempButton));
-                    levelsContainer.innerHTML = '';
-        
-                    response.data.levels.forEach(elem => {
-                        totalCount = elem.nodes.length;
-                        state = false;
-                        newItem = document.createElement('div');
-                        newItem.className = 'level';
-                        levelsContainer.appendChild(newItem);
-                        temp = 0;
-                        while (true) {
-                            newSublevel = document.createElement('div');
-                            newSublevel.className = 'sublevel';
-
-                            if (state) {
-                                newSublevel.classList.add('sublevel-reverse');
-                            }
-                            newItem.appendChild(newSublevel);
-                            for (let i = temp; i < numItems+temp; i++) {
-                                if (elem.nodes[i].status === 'approved') {
-                                    newSublevel.insertAdjacentHTML('beforeend', `<button class="btn btn-success btn-sm node-button text-truncate">${elem.nodes[i].firstName}</button>`);
-                                }  else if (elem.nodes[i].status === 'pending') {
-                                    newSublevel.insertAdjacentHTML('beforeend', `<button class="btn btn-secondary btn-sm node-button text-truncate">${elem.nodes[i].firstName}</button>`);
-                                } else if (elem.nodes[i].status === 'rejected') {
-                                    newSublevel.insertAdjacentHTML('beforeend', `<button class="btn btn-danger btn-sm node-button text-truncate">${elem.nodes[i].firstName}</button>`);
-                                }
-                                totalCount -= 1;
-                                if (totalCount === 0) {
-                                    break;
-                                }
-                            }
-                            temp += numItems;
-                            if (totalCount === 0) {
-                                break;
-                            }
-                            state = !state;
-                        }
-                    });
+                    render();
                 });
             });
         } catch (error) {
