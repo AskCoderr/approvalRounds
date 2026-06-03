@@ -155,13 +155,15 @@ function destroyAllPopovers() {
 }
 
 window.addEventListener('resize', (event) => {
-    destroyAllPopovers();
-    newSublevel = document.querySelector('.sublevel');
-    tempButton = document.querySelector('.node-button');
-    render();
-    requestAnimationFrame(() => {
-        jsPlumb.repaintEverything();
-    });
+    if (getComputedStyle(roundBox).display === 'block') {
+        destroyAllPopovers();
+        newSublevel = document.querySelector('.sublevel');
+        tempButton = document.querySelector('.node-button');
+        render();
+        requestAnimationFrame(() => {
+            jsPlumb.repaintEverything();
+        });
+    }  
 });
 
 
@@ -244,9 +246,7 @@ levelsContainer.addEventListener('click', (event) => {
                 customClass: `popover-font text-${color}`
             });
         }
-        if (previousPopover && previousPopover !== popover) {
-            console.log('helloowwwwww');
-            
+        if (previousPopover && previousPopover !== popover) {            
             previousPopover.hide();
         }
         if (previousPopover !== popover || !popover._isShown()) {
@@ -264,5 +264,3 @@ document.addEventListener('click', (event) => {
         previousPopover.hide();
     }
 });
-
-
