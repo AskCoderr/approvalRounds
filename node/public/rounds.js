@@ -13,10 +13,10 @@ approvalRoundsLink.classList.add('active');
 let numItems = 0, style, paddingLeft, paddingRight, contentWidth, response, newItem, newSublevel, tempButton, totalCount, counter, state, temp, gap, previousLevel, previousButton, newButton, nodeDown = false, nodeLeft = false, popover, previousPopover;
 
 function getFullWidth(element) {
-    const style = window.getComputedStyle(element)
-    const marginLeft = parseFloat(style.marginLeft)
-    const marginRight = parseFloat(style.marginRight)
-    return element.offsetWidth + marginLeft + marginRight
+    const style = window.getComputedStyle(element);
+    const marginLeft = parseFloat(style.marginLeft);
+    const marginRight = parseFloat(style.marginRight);
+    return element.offsetWidth + marginLeft + marginRight;
 }
 
 const connStyle = {
@@ -60,13 +60,13 @@ function render() {
                 newButton = document.createElement('button');
                 newButton.dataset.nodeId = elem.nodes[i].id;
                 newButton.dataset.levelId = elem.id;
-                if (elem.nodes[i].status === 'Approved') {
+                if (elem.nodes[i].status === 'approved') {
                     newButton.classList.add('btn', 'btn-success', 'btn-sm', 'node-button', 'text-truncate');
                     newButton.textContent = elem.nodes[i].firstName;
-                } else if (elem.nodes[i].status === 'Pending') {
+                } else if (elem.nodes[i].status === 'pending') {
                     newButton.classList.add('btn', 'btn-secondary', 'btn-sm', 'node-button', 'text-truncate');
                     newButton.textContent = elem.nodes[i].firstName;
-                } else if (elem.nodes[i].status === 'Rejected') {
+                } else if (elem.nodes[i].status === 'rejected') {
                     newButton.classList.add('btn', 'btn-danger', 'btn-sm', 'node-button', 'text-truncate');
                     newButton.textContent = elem.nodes[i].firstName;
                 }
