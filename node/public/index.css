@@ -50,6 +50,23 @@
     background-color: rgba(0, 0, 0, 0.863);
 }
 
+.add-workspace-modal {
+    display: none;
+    background-color: #EEEEEE;
+    position: fixed;
+    z-index: 110;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80vw;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #222831 #EEEEEE;
+}
+
 .workspace-edit-menu {
     display: none;
     background-color: #EEEEEE;
@@ -61,6 +78,24 @@
     left: 50vw;
     top: 50vh;
     transform: translate(-50%, -50%);
+}
+
+.underline {
+    background-color: #00ADB5;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3vh;
+    height: 3px;
+    width: 80%;
+    border-radius: 10px;
+}
+
+.create-workspace-textbox {
+    margin-bottom: 2vh;
+}
+
+textarea {
+    margin-bottom: 2vh;
 }
 
 .update-name-form {

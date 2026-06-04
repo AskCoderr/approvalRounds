@@ -12,6 +12,20 @@
 
 <div class="overlay"></div>
 
+<div class="add-workspace-modal">
+    <i class="fa-regular fa-circle-xmark close-forms"></i>
+    <h4>Create Workspace</h4>
+    <div class="underline"></div>
+    <form action="" method="post">
+        <label for="workspaceName" class="form-label">Workspace Name</label>
+        <input type="email" class="form-control create-workspace-textbox" id="workspaceName" aria-describedby="addWorkspaceHelp">
+    
+        <label for="addMembers">Add Members (comma separated emails)</label>
+        <textarea id="addMembers" class="form-control user-comment" placeholder="example1@gmail.com, example2@gmail.com, ..."></textarea>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</div>
+
 <div class="workspace-edit-menu">
     <i class="fa-regular fa-circle-xmark close-forms"></i>
     <form class="update-name-form">
@@ -31,17 +45,6 @@
     <button type="submit" class="btn btn-danger">Delete</button>
     </form>
 </div>
-
-<!-- <div class="add-workspace-menu">
-    <form>
-    <div class="mb-3">
-        <label for="deleteWorkspace" class="form-label">Delete Workspace</label>
-        <input type="email" class="form-control" id="deleteWorkspace" aria-describedby="deleteHelp">
-        <div id="deleteHelp" class="form-text">type delete, then press delete button for workspace deletion</div>
-    </div>
-    <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
-</div> -->
 
 <ul class="list-group container">
     <li class="list-group-item add-workspace-button"><i class="fa-solid fa-plus plus-icon"></i></li>
