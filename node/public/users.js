@@ -3,8 +3,9 @@ const container = document.querySelector('.container');
 const overlay = document.querySelector('.overlay');
 const roleEditor = document.querySelector('.role-editor');
 const addUserButton = document.querySelector('.add-user-button');
-const closeForms = document.querySelector('.close-forms');
+const closeFormss = document.querySelectorAll('.close-forms');
 const roleEditorHeading = document.querySelector('.role-editor-heading');
+const addUsersModal = document.querySelector('.add-users-modal');
 
 let popover, userData;
 
@@ -13,6 +14,7 @@ usersLink.classList.add('active');
 container.addEventListener('click', (event) => {
     if (event.target.matches('.add-user-button')) {
         overlay.style.display = 'block';
+        addUsersModal.style.display = 'block';
     } else if (event.target.closest('.remove')) {
         popover = bootstrap.Popover.getInstance(event.target.closest('.remove'));
         if (!popover) {
@@ -54,13 +56,16 @@ container.addEventListener('click', (event) => {
         }
     }
 });
-
-closeForms.addEventListener('click', (event) => {
-    overlay.style.display = 'none';
-    roleEditor.style.display = 'none';
+closeFormss.forEach(closeForms => {
+    closeForms.addEventListener('click', (event) => {
+        overlay.style.display = 'none';
+        roleEditor.style.display = 'none';
+        addUsersModal.style.display = 'none';
+    });
 });
 
 overlay.addEventListener('click', (event) => {
     overlay.style.display = 'none';
     roleEditor.style.display = 'none';
+    addUsersModal.style.display = 'none';
 });

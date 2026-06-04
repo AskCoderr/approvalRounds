@@ -9,6 +9,32 @@
     background-color: rgba(0, 0, 0, 0.863);
 }
 
+.add-users-modal {
+    display: none;
+    background-color: #EEEEEE;
+    position: fixed;
+    z-index: 110;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80vw;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #222831 #EEEEEE;
+}
+
+.add-users-heading {
+    margin-bottom: 2vh;
+}
+
+.add-users-text-box {
+    height: 5rem;
+    margin-bottom: 10px;
+}
+
 .role-editor {
     display: none;
     background-color: #EEEEEE;

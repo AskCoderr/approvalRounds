@@ -1,6 +1,16 @@
 <%- include("header.ejs", {style: "users"}) %>
 
 <div class="overlay"></div>
+
+<div class="add-users-modal">
+    <i class="fa-regular fa-circle-xmark close-forms"></i>
+    <form action="" method="post">
+        <h5 class="add-users-heading">Add Members (comma separated emails)</h5>
+        <textarea id="addMembers" class="form-control add-users-text-box" placeholder="example1@gmail.com, example2@gmail.com, ..."></textarea>
+        <button type="submit" class="btn btn-primary">Invite</button>
+    </form>
+</div>
+
 <div class="role-editor">
     <i class="fa-regular fa-circle-xmark close-forms"></i>
     <h4 class="role-editor-heading"></h4>
