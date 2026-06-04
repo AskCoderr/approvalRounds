@@ -7,10 +7,14 @@ const container = document.querySelector('.container');
 const roundBox = document.querySelector('.round-box');
 const roundName = document.querySelector('.round-name');
 const levelsContainer = document.querySelector('.levels-container');
+const addRoundsButton = document.querySelector('.add-rounds-button');
+const createRound = document.querySelector('.create-round');
+const addLevel = document.querySelector('.add-level');
+const createRoundForm = document.querySelector('.create-round-form');
 
 approvalRoundsLink.classList.add('active');
 
-let numItems = 0, style, paddingLeft, paddingRight, contentWidth, response, newItem, newSublevel, tempButton, totalCount, counter, state, temp, gap, previousLevel, previousButton, newButton, nodeDown = false, nodeLeft = false, popover, previousPopover;
+let numItems = 0, style, paddingLeft, paddingRight, contentWidth, response, newItem, newSublevel, tempButton, totalCount, counter, state, temp, gap, previousLevel, previousButton, newButton, nodeDown = false, nodeLeft = false, popover, previousPopover, numChild, clickedDeleteLevel;
 
 function getFullWidth(element) {
     const style = window.getComputedStyle(element);
@@ -163,9 +167,8 @@ window.addEventListener('resize', (event) => {
         requestAnimationFrame(() => {
             jsPlumb.repaintEverything();
         });
-    }  
+    }
 });
-
 
 container.addEventListener('click', async (event) => {
     if (event.target.matches('.view-approval-button')) {
@@ -205,18 +208,60 @@ container.addEventListener('click', async (event) => {
     }
 });
 
+addRoundsButton.addEventListener('click', (event) => {
+    overlay.style.display = 'block';
+    createRound.style.display = 'block';
+});
+
 closeFormss.forEach(closeForms => {
     closeForms.addEventListener('click', (event) => {
         approvalBox.style.display = 'none';
         roundBox.style.display = 'none';
+        createRound.style.display = 'none';    
         overlay.style.display = 'none';
     });
-})
+});
 
 overlay.addEventListener('click', (event) => {
     approvalBox.style.display = 'none';
     roundBox.style.display = 'none';
+    createRound.style.display = 'none';
     overlay.style.display = 'none';
+});
+
+addLevel.addEventListener('click', (event) => {
+    numChild = createRoundForm.childElementCount;
+    createRoundForm.insertAdjacentHTML('beforeend', `
+        <div class="create-level-container" id="level-${numChild+1}">
+            <div class="create-level-header">
+                <h5>Level ${numChild+1}</h5>
+                <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions${numChild+1}" id="inlineRadio${numChild+1}a" value="series" checked>
+                    <label class="form-check-label" for="inlineRadio${numChild+1}a">series</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions${numChild+1}" id="inlineRadio${numChild+1}b" value="parallel">
+                    <label class="form-check-label" for="inlineRadio${numChild+1}b">parallel</label>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm delete-level"><i class="fa-regular fa-trash-can"></i></button>
+                </div>
+            </div>
+            <label for="addMembers${numChild+1}" class="form-label">Members (comma separated emails)</label>
+            <input type="text" class="form-control add-members-textbox" id="addMembers${numChild+1}" aria-describedby="addLevelHelp" placeholder="example1@gmail.com, example2@gmail.com, ...">
+        </div>
+    `);
+});
+
+createRoundForm.addEventListener('click', (event) => {
+    if (event.target.closest('.delete-level')) {
+        numChild = createRoundForm.childElementCount;
+        clickedDeleteLevel = event.target.closest('.create-level-container');
+        for (let i = parseInt(clickedDeleteLevel.id.replace('level-', ''))+1; i <= numChild; i++) {
+            document.querySelector(`#level-${i-1}`).querySelector('input[type="text"]').value = document.querySelector(`#level-${i}`).querySelector('input[type="text"]').value;
+        }
+        document.querySelector(`#level-${numChild}`).remove();
+    }
 });
 
 let tempNode;
@@ -224,7 +269,7 @@ let color;
 levelsContainer.addEventListener('click', (event) => {
     if (event.target.matches('.node-button')) {
         popover = bootstrap.Popover.getInstance(event.target);
-        if (!popover) {            
+        if (!popover) {
             tempNode = response.data.levels.find(lvl => lvl.id == event.target.dataset.levelId).nodes.find(nde => nde.id == event.target.dataset.nodeId);
             if (tempNode.status === 'Approved') {
                 color = 'success';
@@ -236,7 +281,7 @@ levelsContainer.addEventListener('click', (event) => {
             popover = new bootstrap.Popover(event.target, {
                 title: tempNode.status.toUpperCase(),
                 html: true,
-                sanitize: false, 
+                sanitize: false,
                 content: `
                     <h6>${tempNode.userName}</h6>
                     <p>${tempNode.userMail}</p>
@@ -246,7 +291,7 @@ levelsContainer.addEventListener('click', (event) => {
                 customClass: `popover-font text-${color}`
             });
         }
-        if (previousPopover && previousPopover !== popover) {            
+        if (previousPopover && previousPopover !== popover) {
             previousPopover.hide();
         }
         if (previousPopover !== popover || !popover._isShown()) {
@@ -258,7 +303,7 @@ levelsContainer.addEventListener('click', (event) => {
 
 document.addEventListener('click', (event) => {
     if (event.target.matches('.node-button') || event.target.closest('.popover')) {
-        return; 
+        return;
     }
     if (previousPopover) {
         previousPopover.hide();

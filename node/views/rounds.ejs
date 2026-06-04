@@ -2,6 +2,31 @@
 
 <div class="overlay"></div>
 
+<div class="create-round">
+  <i class="fa-regular fa-circle-xmark close-forms"></i>
+  <button type="button" class="btn btn-primary add-level">Add Level</button>
+  <form action="" method="post" class="create-round-form">
+    <div class="create-level-container" id="level-1">
+      <div class="create-level-header">
+        <h5>Level 1</h5>
+        <div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1a" value="series" checked>
+            <label class="form-check-label" for="inlineRadio1a">series</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1b" value="parallel">
+            <label class="form-check-label" for="inlineRadio1b">parallel</label>
+          </div>
+          <button type="button" class="btn btn-danger btn-sm delete-level"><i class="fa-regular fa-trash-can"></i></button>
+        </div>
+      </div>
+      <label for="addMembers1" class="form-label">Members (comma separated emails)</label>
+      <input type="text" class="form-control add-members-textbox" id="addMembers1" aria-describedby="addLevelHelp" placeholder="example1@gmail.com, example2@gmail.com, ...">
+    </div>
+  </form>
+</div>
+
 <div class="round-box">
   <i class="fa-regular fa-circle-xmark close-forms"></i>
   <h4 class="round-name"></h4>
@@ -81,7 +106,7 @@
 </div>
 
 <ul class="list-group container">
-  <li class="list-group-item add-workspace-button"><i class="fa-solid fa-plus plus-icon"></i></li>
+  <li class="list-group-item add-rounds-button"><i class="fa-solid fa-plus plus-icon"></i></li>
   <% approvalRounds.forEach((round) => { %>
     <li class="list-group-item items" data-round-id="<%= round.id %>">
       
