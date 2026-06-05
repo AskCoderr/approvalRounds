@@ -16,7 +16,7 @@
     z-index: 110;
     padding: 20px;
     border-radius: 10px;
-    width: 80vw;
+    width: 90vw;
     left: 50vw;
     top: 50vh;
     transform: translate(-50%, -50%);
@@ -24,6 +24,19 @@
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #222831 #EEEEEE;
+}
+
+.create-round-div1 {
+    margin: 2vh 0;
+    padding: 10px;
+    border: 2px solid #222831;
+    border-radius: 10px;
+}
+
+.create-round-div2 {
+    padding: 10px;
+    border: 2px solid #222831;
+    border-radius: 10px;
 }
 
 .add-level {
@@ -46,6 +59,10 @@
 
 .add-members-textbox {
     margin-bottom: 2vh;
+}
+
+.submit-create-round {
+    margin-top: 2vh;
 }
 
 .round-box {

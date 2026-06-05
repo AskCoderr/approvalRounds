@@ -4,26 +4,56 @@
 
 <div class="create-round">
   <i class="fa-regular fa-circle-xmark close-forms"></i>
-  <button type="button" class="btn btn-primary add-level">Add Level</button>
-  <form action="" method="post" class="create-round-form">
-    <div class="create-level-container" id="level-1">
-      <div class="create-level-header">
-        <h5>Level 1</h5>
-        <div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1a" value="series" checked>
-            <label class="form-check-label" for="inlineRadio1a">series</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1b" value="parallel">
-            <label class="form-check-label" for="inlineRadio1b">parallel</label>
-          </div>
-          <button type="button" class="btn btn-danger btn-sm delete-level"><i class="fa-regular fa-trash-can"></i></button>
+  <form action="" method="" class="create-round-form">
+    <h4>Create Approval Round</h4>
+    <div class="underline"></div>
+    <div class="create-round-div1">
+      <div class="mb-3">
+          <label for="messageTitle" class="form-label">Title</label>
+          <input type="text" class="form-control" id="messageTitle" placeholder="Enter the title">
         </div>
-      </div>
-      <label for="addMembers1" class="form-label">Members (comma separated emails)</label>
-      <input type="text" class="form-control add-members-textbox" id="addMembers1" aria-describedby="addLevelHelp" placeholder="example1@gmail.com, example2@gmail.com, ...">
+
+        <div class="mb-3">
+          <label for="messageSubject" class="form-label">Subject</label>
+          <input type="text" class="form-control" id="messageSubject" placeholder="Enter the subject">
+        </div>
+
+        <div class="mb-3">
+          <label for="messageBody" class="form-label">Body</label>
+          <textarea class="form-control" id="messageBody" rows="5" placeholder="Write your message here..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="fileAttachment" class="form-label">Attach a file</label>
+          <input class="form-control" type="file" id="fileAttachment" multiple>
+        </div>
     </div>
+    <div class="create-round-div2">
+      <button type="button" class="btn btn-primary add-level">Add Level</button>
+      <div class="create-level-container" id="level-1">
+        <div class="create-level-header">
+          <h5>Level 1</h5>
+          <div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1a" value="series" checked>
+              <label class="form-check-label" for="inlineRadio1a">series</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1b" value="parallel (any)">
+              <label class="form-check-label" for="inlineRadio1b">parallel (any)</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1c" value="parallel (all)">
+              <label class="form-check-label" for="inlineRadio1c">parallel (all)</label>
+            </div>
+            <button type="button" class="btn btn-danger btn-sm delete-level"><i class="fa-regular fa-trash-can"></i></button>
+          </div>
+        </div>
+        <label for="addMembers1" class="form-label">Members (comma separated emails)</label>
+        <input type="text" class="form-control add-members-textbox" id="addMembers1" aria-describedby="addLevelHelp" placeholder="example1@gmail.com, example2@gmail.com, ...">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success submit-create-round">Submit</button>
   </form>
 </div>
 

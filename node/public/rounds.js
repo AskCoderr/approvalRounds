@@ -11,6 +11,7 @@ const addRoundsButton = document.querySelector('.add-rounds-button');
 const createRound = document.querySelector('.create-round');
 const addLevel = document.querySelector('.add-level');
 const createRoundForm = document.querySelector('.create-round-form');
+const createRoundDiv2 = document.querySelector('.create-round-div2');
 
 approvalRoundsLink.classList.add('active');
 
@@ -230,8 +231,8 @@ overlay.addEventListener('click', (event) => {
 });
 
 addLevel.addEventListener('click', (event) => {
-    numChild = createRoundForm.childElementCount;
-    createRoundForm.insertAdjacentHTML('beforeend', `
+    numChild = createRoundForm.querySelectorAll('.create-level-container').length;
+    createRoundDiv2.insertAdjacentHTML('beforeend', `
         <div class="create-level-container" id="level-${numChild+1}">
             <div class="create-level-header">
                 <h5>Level ${numChild+1}</h5>
@@ -241,8 +242,12 @@ addLevel.addEventListener('click', (event) => {
                     <label class="form-check-label" for="inlineRadio${numChild+1}a">series</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions${numChild+1}" id="inlineRadio${numChild+1}b" value="parallel">
-                    <label class="form-check-label" for="inlineRadio${numChild+1}b">parallel</label>
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions${numChild+1}" id="inlineRadio${numChild+1}b" value="parallel (any)">
+                    <label class="form-check-label" for="inlineRadio${numChild+1}b">parallel (any)</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions${numChild+1}" id="inlineRadio${numChild+1}c" value="parallel (all)">
+                    <label class="form-check-label" for="inlineRadio${numChild+1}c">parallel (all)</label>
                 </div>
                 <button type="button" class="btn btn-danger btn-sm delete-level"><i class="fa-regular fa-trash-can"></i></button>
                 </div>
@@ -255,10 +260,11 @@ addLevel.addEventListener('click', (event) => {
 
 createRoundForm.addEventListener('click', (event) => {
     if (event.target.closest('.delete-level')) {
-        numChild = createRoundForm.childElementCount;
+        numChild = createRoundForm.querySelectorAll('.create-level-container').length;
         clickedDeleteLevel = event.target.closest('.create-level-container');
         for (let i = parseInt(clickedDeleteLevel.id.replace('level-', ''))+1; i <= numChild; i++) {
             document.querySelector(`#level-${i-1}`).querySelector('input[type="text"]').value = document.querySelector(`#level-${i}`).querySelector('input[type="text"]').value;
+            document.querySelector(`#level-${i-1}`).querySelector(`input[type="radio"][value="${document.querySelector(`#level-${i}`).querySelector('input[type="radio"]:checked').value}"]`).checked = true;
         }
         document.querySelector(`#level-${numChild}`).remove();
     }
