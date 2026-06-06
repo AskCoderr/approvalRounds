@@ -4,6 +4,10 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import session from 'express-session';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -12,15 +16,19 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// const requireAuth = (req, res, next) => {
-//     const token = req.cookies.jwt;
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'dev_secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // set to true if deploying with HTTPS
+}));
 
-//     if (!token) {
-//         return res.redirect('/login');
-//     }
-
-//     next();
-// };
+const requireAuth = (req, res, next) => {
+    if (!req.session || !req.session.accessToken) {
+        return res.redirect('/auth/login');
+    }
+    next();
+};
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,8 +37,58 @@ app.use(cookieParser());
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/auth/login', (req, res) => {
+    const loginUrl = `https://${process.env.COGNITO_DOMAIN}/login?client_id=${process.env.COGNITO_CLIENT_ID}&response_type=code&scope=email+openid+profile&redirect_uri=${process.env.COGNITO_REDIRECT_URI}`;
+    res.redirect(loginUrl);
+});
+
+app.get('/auth/callback', async (req, res) => {
+    const { code } = req.query;
+
+    if (!code) return res.status(400).send('No authorization code provided');
+
+    try {
+        const credentials = Buffer.from(`${process.env.COGNITO_CLIENT_ID}:${process.env.COGNITO_CLIENT_SECRET}`).toString('base64');
+
+        const tokenResponse = await axios.post(`https://${process.env.COGNITO_DOMAIN}/oauth2/token`, 
+            new URLSearchParams({
+                grant_type: 'authorization_code',
+                client_id: process.env.COGNITO_CLIENT_ID,
+                code: code,
+                redirect_uri: process.env.COGNITO_REDIRECT_URI
+            }).toString(), {
+            headers: {
+                'Authorization': `Basic ${credentials}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const { access_token, id_token } = tokenResponse.data;
+        const decodedUser = jwtDecode(id_token);
+
+        req.session.accessToken = access_token;
+        req.session.idToken = id_token;
+        req.session.user = {
+            email: decodedUser.email,
+            firstName: decodedUser.given_name,
+            lastName: decodedUser.family_name
+        };
+
+        res.redirect('/');
+    } catch (error) {
+        console.error('Token Exchange Failed:', error.response ? error.response.data : error.message);
+        res.status(500).send('Authentication failed');
+    }
+});
+
+app.get('/auth/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect(`https://${process.env.COGNITO_DOMAIN}/logout?client_id=${process.env.COGNITO_CLIENT_ID}&logout_uri=http://localhost:3000`);
+});
+
+app.use(requireAuth);
 
 app.get('/', (req, res) => {
     res.render('index', {
