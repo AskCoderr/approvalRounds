@@ -296,7 +296,7 @@ app.get('/users', (req, res) => {
             "firstName": "Rahul",
             "userName": "Rahul Sharma",
             "email": "rahul.sharma@example.com",
-            "roles": ["approvalEditor", "removeUser"]
+            "roles": ["editRoles", "removeUser"]
         },
         {
             "id": 3,
@@ -317,7 +317,7 @@ app.get('/users', (req, res) => {
             "firstName": "Sneha",
             "userName": "Sneha Reddy",
             "email": "sneha.reddy@example.com",
-            "roles": ["approvalCreator", "approvalEditor"]
+            "roles": ["approvalCreator", "editRoles"]
         },
         {
             "id": 6,
@@ -338,7 +338,7 @@ app.get('/users', (req, res) => {
             "firstName": "Vikram",
             "userName": "Vikram Singh",
             "email": "vikram.singh@example.com",
-            "roles": ["approvalEditor", "approvalCreator", "admin"]
+            "roles": ["editRoles", "approvalCreator", "admin"]
         },
         {
             "id": 9,
@@ -359,7 +359,7 @@ app.get('/users', (req, res) => {
             "firstName": "Meera",
             "userName": "Meera Krishnan",
             "email": "meera.krishnan@example.com",
-            "roles": ["admin", "approvalEditor", "addUser"]
+            "roles": ["admin", "editRoles", "addUser"]
         },
         {
             "id": 12,
@@ -373,7 +373,7 @@ app.get('/users', (req, res) => {
             "firstName": "Lakshmi",
             "userName": "Lakshmi Subramaniam",
             "email": "lakshmi.subramaniam@example.com",
-            "roles": ["removeUser", "approvalEditor"]
+            "roles": ["removeUser", "editRoles"]
         },
         {
             "id": 14,
@@ -387,7 +387,7 @@ app.get('/users', (req, res) => {
             "firstName": "Kavya",
             "userName": "Kavya Patel",
             "email": "kavya.patel@example.com",
-            "roles": ["approvalCreator", "approvalEditor", "removeUser"]
+            "roles": ["approvalCreator", "editRoles", "removeUser"]
         },
         {
             "id": 16,
@@ -401,7 +401,7 @@ app.get('/users', (req, res) => {
             "firstName": "Pooja",
             "userName": "Pooja Desai",
             "email": "pooja.desai@example.com",
-            "roles": ["approvalEditor"]
+            "roles": ["editRoles"]
         },
         {
             "id": 18,
@@ -415,7 +415,7 @@ app.get('/users', (req, res) => {
             "firstName": "Deepa",
             "userName": "Deepa Rajan",
             "email": "deepa.rajan@example.com",
-            "roles": ["admin", "approvalCreator", "approvalEditor"]
+            "roles": ["admin", "approvalCreator", "editRoles"]
         },
         {
             "id": 20,

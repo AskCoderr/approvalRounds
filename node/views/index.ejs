@@ -18,7 +18,7 @@
     <div class="underline"></div>
     <form action="" method="post">
         <label for="workspaceName" class="form-label">Workspace Name</label>
-        <input type="email" class="form-control create-workspace-textbox" id="workspaceName" aria-describedby="addWorkspaceHelp">
+        <input type="text" class="form-control create-workspace-textbox" id="workspaceName" aria-describedby="addWorkspaceHelp" maxlength="100">
     
         <label for="addMembers">Add Members (comma separated emails)</label>
         <textarea id="addMembers" class="form-control user-comment" placeholder="example1@gmail.com, example2@gmail.com, ..."></textarea>
@@ -47,7 +47,7 @@
 </div>
 
 <ul class="list-group container">
-    <li class="list-group-item add-workspace-button"><i class="fa-solid fa-plus plus-icon"></i></li>
+    <li class="list-group-item add-workspace-button"><i class="fa-solid fa-plus"></i></li>
     <% for (let i = 0; i < workspaces.length; i++) { %>
         <li class="list-group-item items">
             <p class="company-name"><%= `${i+1}.   ` + workspaces[i] %></p>
