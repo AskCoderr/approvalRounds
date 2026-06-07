@@ -209,6 +209,7 @@ app.get('/workspace/:workspaceId/pending-approvals', async (req, res) => {
         lastName: req.session.user.lastName,
         email: req.session.user.email,
         roles: response2.data,
+        workspaceId: workspaceId,
         pendingApprovals: response.data
     });
 });
@@ -227,8 +228,8 @@ app.get('/workspace/:workspaceId/pending-approvals/:apprId', async (req, res) =>
     //     initiatedBy: "Anand Narayan",
     //     body: "Requesting budget clearance for the procurement of high-speed optical lenses required for real-time computer vision analysis and cricket ball seam tracking modules.",
     //     attachmentLinks: [
-    //         "https://storage.internal/docs/lens_specifications.pdf",
-    //         "https://storage.internal/quotes/vendor_pricing_v2.xlsx"
+    //         ["first.pdf", "https://storage.internal/docs/lens_specifications.pdf"],
+    //         ["second.pdf", "https://storage.internal/quotes/vendor_pricing_v2.xlsx"]
     //     ],
     //     comments: [
     //         {
@@ -255,6 +256,45 @@ app.get('/workspace/:workspaceId/pending-approvals/:apprId', async (req, res) =>
     }
 
     res.json(response.data);
+});
+
+app.post('/workspace/:workspaceId/pending-approvals/:approvalId', async (req, res) => {
+    const workspaceId = req.params.workspaceId;
+    const approvalId = req.params.approvalId;
+    const status = req.body.status;
+
+    // here-here
+    try {
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval/${approvalId}`, 
+            {status: status}, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("Spring Boot Communication Error:", error.response?.status, error.message);
+        return res.status(500).send("Could not fetch data from the backend.");
+    }
+});
+
+app.post('/workspace/:workspaceId/pending-approvals/:approvalId/comments', async (req, res) => {
+    const workspaceId = req.params.workspaceId;
+    const approvalId = req.params.approvalId;
+    const comment = req.body.comment;
+    // here-here
+    try {
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval/${approvalId}/comments`, 
+            {user: req.session.user.id, comment: comment}, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("Spring Boot Communication Error:", error.response?.status, error.message);
+        return res.status(500).send("Could not fetch data from the backend.");
+    }
 });
 
 app.get('/workspace/:workspaceId/rounds', (req, res) => {

@@ -57,12 +57,6 @@ createWorkspaceForm.addEventListener('submit', async (event) => {
 
 updateWorkspaceNameForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-
-
-})
-
-updateWorkspaceNameForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
     const formData = new FormData(updateWorkspaceNameForm);
     try {
         await axios.patch(`/workspace/${workspaceClicked}/name/${formData.get('updateName')}`);

@@ -70,3 +70,5 @@ create table pending_approvals (
 );
 
 create index idx_users_email on users(email);
+
+-- think about index on node_data(user_id)

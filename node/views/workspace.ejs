@@ -4,36 +4,21 @@
 
 <div class="approval-box">
   <i class="fa-regular fa-circle-xmark close-forms"></i>
-  <h4>Engineering Procurement Request</h4>
-  <p class="text-muted subject">Subject: Procure High-Speed Camera Lenses for Seam Tracking</p>
-  <p class="text-muted initiated-by">Initiated by: James Jones</p>
+  <h4 class="approval-title"></h4>
+  <p class="text-muted subject"></p>
+  <p class="text-muted initiated-by"></p>
   <div class="underline"></div>
 
-  <div class="body">Requesting budget clearance for the procurement of high-speed optical lenses required for real-time computer vision analysis and cricket ball seam tracking modules.</div>
+  <div class="body"></div>
   
   <h5>Attachments</h5>
-  <ul class="list-group attachments-container">
-    <li class="list-group-item flex-item">An item.pdf</li>
-    <li class="list-group-item flex-item">A second item.xls</li>
-    <li class="list-group-item flex-item">A third item.png</li>
-    <li class="list-group-item flex-item">A fourth item.pdf</li>
-    <li class="list-group-item flex-item">And a fifth one.pdf</li>
-  </ul>
+  <ul class="list-group attachments-container"></ul>
 
   <h5>Comments</h5>
   <div class="comments-div">
     <textarea class="form-control user-comment" placeholder="Write a comment..."></textarea>
     <button type="button" class="btn post-button">Post</button>
-    <ul>
-      <li class="comment">Please attach the secondary vendor quotation string before final allocation approval.</li>
-      <p class="author text-muted">- James Peter</p>
-      <li class="comment">Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters.</li>
-      <p class="author text-muted">- Meera Nair</p>
-      <li class="comment">Please attach the secondary vendor quotation string before final allocation approval.</li>
-      <p class="author text-muted">- James Peter</p>
-      <li class="comment">Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters.</li>
-      <p class="author text-muted">- Meera Nair</p>
-    </ul>
+    <ul class="comments-container"></ul>
   </div>
   <div class="btn-group" role="group" aria-label="Basic mixed styles example">
     <button type="button" class="btn btn-danger reject-btn" data-bs-toggle="popover">Reject</button>
@@ -42,7 +27,7 @@
 
 </div>
 
-<ul class="list-group container">
+<ul class="list-group container" data-workspace-id="<%= workspaceId %>">
   <% pendingApprovals.forEach((approval) => { %>
     <li class="list-group-item items" data-approval-id="<%= approval.id %>">
       
