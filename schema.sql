@@ -68,3 +68,5 @@ create table pending_approvals (
     user_id int references users(id),
     arrived_at timestamp default current_timestamp
 );
+
+create index idx_users_email on users(email);
