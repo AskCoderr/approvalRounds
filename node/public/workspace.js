@@ -9,11 +9,7 @@ pendingApprovalLink.classList.add('active');
 container.addEventListener('click', (event) => {
     const item = event.target.closest('.items');
     if (item) {
-        // axios.get(`/workspace/${item.dataset.approvalId}`)
-        // .then(response => {})
-        // .catch(error => {console.error("Error fetching approval:", error);
-
-        // });
+        
         overlay.style.display = 'block';
         approvalBox.style.display = 'block';
     }

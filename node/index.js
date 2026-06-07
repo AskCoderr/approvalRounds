@@ -136,9 +136,54 @@ app.get('/', async (req, res) => {
         firstName: req.session.user.firstName,
         lastName: req.session.user.lastName,
         email: req.session.user.email,
-        workspaces: response.data.workspaceTitles, // list of title strings
-        pending: response.data.pendingList // list of pending count
+        workspaces: response.data, // list of {title, pending, id}
     });
+});
+
+app.post('/create-workspace', async (req, res) => {
+    const { workspaceName, members } = req.body;
+    try {
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/create_workspace`, {workspaceName, members, createdBy: req.session.user.id}, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("Spring Boot Communication Error:", error.response?.status, error.message);
+        return res.status(500).send("Could not fetch data from the backend.");
+    }
+});
+
+app.patch('/workspace/:workspaceId/name/:name', async (req, res) => {
+    const workspaceId = req.params.workspaceId;
+    const name = req.params.name;
+    try {
+        await axios.patch(`${process.env.SPRINGBOOT_URL}/api/workspace/${workspaceId}/name/${name}`, {}, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("Spring Boot Communication Error:", error.response?.status, error.message);
+        return res.status(500).send("Could not fetch data from the backend.");
+    }
+});
+
+app.delete('/workspace/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        await axios.delete(`${process.env.SPRINGBOOT_URL}/api/workspace/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("Spring Boot Communication Error:", error.response?.status, error.message);
+        return res.status(500).send("Could not fetch data from the backend.");
+    }
 });
 
 app.get('/workspace/:workspaceId/pending-approvals', async (req, res) => {
@@ -199,7 +244,7 @@ app.get('/workspace/:workspaceId/pending-approvals/:apprId', async (req, res) =>
 
     let response;
     try {
-        response = await axios.get(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval-data/${apprId}`, {
+        response = await axios.get(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval/${apprId}`, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
             }
@@ -247,9 +292,9 @@ app.get('/workspace/:workspaceId/rounds', (req, res) => {
     }
 
     res.render('rounds', {
-        firstName: req.session.firstName,
-        lastName: req.session.lastName,
-        email: req.session.email,
+        firstName: req.session.user.firstName,
+        lastName: req.session.user.lastName,
+        email: req.session.user.email,
         roles: response2,
         approvalRounds: response
     });
@@ -512,9 +557,9 @@ app.get('/users', (req, res) => {
     }
 
     res.render('users.ejs', {
-        firstName: req.session.firstName,
-        lastName: req.session.lastName,
-        email: req.session.email,
+        firstName: req.session.user.firstName,
+        lastName: req.session.user.lastName,
+        email: req.session.user.email,
         roles: response2,
         users: response
     });

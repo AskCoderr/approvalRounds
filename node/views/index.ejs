@@ -16,30 +16,30 @@
     <i class="fa-regular fa-circle-xmark close-forms"></i>
     <h4>Create Workspace</h4>
     <div class="underline"></div>
-    <form action="" method="post">
+    <form class="create-workspace-form">
         <label for="workspaceName" class="form-label">Workspace Name</label>
-        <input type="text" class="form-control create-workspace-textbox" id="workspaceName" aria-describedby="addWorkspaceHelp" maxlength="100">
+        <input type="text" name="workspaceName" class="form-control create-workspace-textbox" id="workspaceName" aria-describedby="addWorkspaceHelp" maxlength="100">
     
         <label for="addMembers">Add Members (comma separated emails)</label>
-        <textarea id="addMembers" class="form-control user-comment" placeholder="example1@gmail.com, example2@gmail.com, ..."></textarea>
+        <textarea id="addMembers" name="members" class="form-control user-comment" placeholder="example1@gmail.com, example2@gmail.com, ..."></textarea>
         <button type="submit" class="btn btn-primary">Create</button>
     </form>
 </div>
 
 <div class="workspace-edit-menu">
     <i class="fa-regular fa-circle-xmark close-forms"></i>
-    <form class="update-name-form">
+    <form class="update-workspace-name-form">
     <div class="mb-3">
         <label for="updateName" class="form-label">Update Name</label>
-        <input type="email" class="form-control" id="updateName">
+        <input type="text" name="updateName" class="form-control" id="updateName" required>
     </div>
     <button type="submit" class="btn btn-info">Submit</button>
     </form>
     
-    <form>
+    <form class="delete-workspace-form">
     <div class="mb-3">
         <label for="deleteWorkspace" class="form-label">Delete Workspace</label>
-        <input type="email" class="form-control" id="deleteWorkspace" aria-describedby="deleteHelp">
+        <input type="text" name="deleteInput" class="form-control" id="deleteWorkspace" aria-describedby="deleteHelp">
         <div id="deleteHelp" class="form-text">type delete, then press delete button for workspace deletion</div>
     </div>
     <button type="submit" class="btn btn-danger">Delete</button>
@@ -49,10 +49,10 @@
 <ul class="list-group container">
     <li class="list-group-item add-workspace-button"><i class="fa-solid fa-plus"></i></li>
     <% for (let i = 0; i < workspaces.length; i++) { %>
-        <li class="list-group-item items">
-            <p class="company-name"><%= `${i+1}.   ` + workspaces[i] %></p>
+        <li class="list-group-item items" data-workspace-id=<%= workspaces[i].id %>>
+            <p class="company-name"><%= `${i+1}.   ` + workspaces[i].title %></p>
             <div>
-                <span class="badge text-bg-primary rounded-pill"><%if (pending[i]) {%> <%= pending[i] %> <% } %></span>
+                <span class="badge text-bg-primary rounded-pill"><%if (workspaces[i].pending) {%> <%= workspaces[i].pending %> <% } %></span>
                 <button type="button" class="btn edit-btn"><i class="fa-solid fa-pen-to-square edit-icon"></i></button>
             </div>
         </li>
