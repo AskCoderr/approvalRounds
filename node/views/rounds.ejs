@@ -4,28 +4,28 @@
 
 <div class="create-round">
   <i class="fa-regular fa-circle-xmark close-forms"></i>
-  <form action="" method="" class="create-round-form">
+  <form action="/workspace/<%= workspaceId %>/rounds" method="post" class="create-round-form" enctype="multipart/form-data">
     <h4>Create Approval Round</h4>
     <div class="underline"></div>
     <div class="create-round-div1">
       <div class="mb-3">
           <label for="messageTitle" class="form-label">Title</label>
-          <input type="text" class="form-control" id="messageTitle" placeholder="Enter the title" maxlength="255">
+          <input type="text" name="title" class="form-control" id="messageTitle" placeholder="Enter the title" maxlength="255">
         </div>
 
         <div class="mb-3">
           <label for="messageSubject" class="form-label">Subject</label>
-          <input type="text" class="form-control" id="messageSubject" placeholder="Enter the subject" maxlength="255">
+          <input type="text" name="subject" class="form-control" id="messageSubject" placeholder="Enter the subject" maxlength="255">
         </div>
 
         <div class="mb-3">
           <label for="messageBody" class="form-label">Body</label>
-          <textarea class="form-control" id="messageBody" rows="5" placeholder="Write your message here..."></textarea>
+          <textarea class="form-control" name="body" id="messageBody" rows="5" placeholder="Write your message here..."></textarea>
         </div>
 
         <div class="mb-3">
           <label for="fileAttachment" class="form-label">Attach a file</label>
-          <input class="form-control" type="file" id="fileAttachment" multiple>
+          <input name="fileAttachment" class="form-control" type="file" id="fileAttachment" multiple>
         </div>
     </div>
     <div class="create-round-div2">
@@ -50,7 +50,7 @@
           </div>
         </div>
         <label for="addMembers1" class="form-label">Members (comma separated emails)</label>
-        <input type="text" class="form-control add-members-textbox" id="addMembers1" aria-describedby="addLevelHelp" placeholder="example1@gmail.com, example2@gmail.com, ...">
+        <input type="text" name="addMembers1" class="form-control add-members-textbox" id="addMembers1" aria-describedby="addLevelHelp" placeholder="example1@gmail.com, example2@gmail.com, ...">
       </div>
     </div>
     <button type="submit" class="btn btn-success submit-create-round">Submit</button>
@@ -74,36 +74,21 @@
 
 <div class="approval-box">
   <i class="fa-regular fa-circle-xmark close-forms"></i>
-  <h4>Engineering Procurement Request</h4>
-  <p class="text-muted subject">Subject: Procure High-Speed Camera Lenses for Seam Tracking</p>
-  <p class="text-muted initiated-by">Initiated by: James Jones</p>
+  <h4 class="approval-title"></h4>
+  <p class="text-muted subject"></p>
+  <p class="text-muted initiated-by"></p>
   <div class="underline"></div>
 
-  <div class="body">Requesting budget clearance for the procurement of high-speed optical lenses required for real-time computer vision analysis and cricket ball seam tracking modules.</div>
+  <div class="body"></div>
 
   <h5>Attachments</h5>
-  <ul class="list-group attachments-container">
-    <li class="list-group-item flex-item">An item.pdf</li>
-    <li class="list-group-item flex-item">A second item.xls</li>
-    <li class="list-group-item flex-item">A third item.png</li>
-    <li class="list-group-item flex-item">A fourth item.pdf</li>
-    <li class="list-group-item flex-item">And a fifth one.pdf</li>
-  </ul>
+  <ul class="list-group attachments-container"></ul>
 
   <h5>Comments</h5>
   <div class="comments-div">
     <textarea class="form-control user-comment" placeholder="Write a comment..."></textarea>
     <button type="button" class="btn post-button">Post</button>
-    <ul>
-      <li class="comment">Please attach the secondary vendor quotation string before final allocation approval.</li>
-      <p class="author text-muted">- James Peter</p>
-      <li class="comment">Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters.</li>
-      <p class="author text-muted">- Meera Nair</p>
-      <li class="comment">Please attach the secondary vendor quotation string before final allocation approval.</li>
-      <p class="author text-muted">- James Peter</p>
-      <li class="comment">Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters.</li>
-      <p class="author text-muted">- Meera Nair</p>
-    </ul>
+    <ul class="comments-container"></ul>
   </div>
 
 </div>
@@ -135,7 +120,7 @@
     </div>
 </div>
 
-<ul class="list-group container">
+<ul class="list-group container" data-workspace-id="<%= workspaceId %>">
   <li class="list-group-item add-rounds-button"><i class="fa-solid fa-plus plus-icon"></i></li>
   <% approvalRounds.forEach((round) => { %>
     <li class="list-group-item items" data-round-id="<%= round.id %>">

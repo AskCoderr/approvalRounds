@@ -12,6 +12,13 @@ const createRound = document.querySelector('.create-round');
 const addLevel = document.querySelector('.add-level');
 const createRoundForm = document.querySelector('.create-round-form');
 const createRoundDiv2 = document.querySelector('.create-round-div2');
+const approvalTitle = document.querySelector('.approval-title');
+const subject = document.querySelector('.subject');
+const initiatedBy = document.querySelector('.initiated-by');
+const body = document.querySelector('.body');
+const attachmentsContainer = document.querySelector('.attachments-container');
+const commentsContainer = document.querySelector('.comments-container');
+
 
 approvalRoundsLink.classList.add('active');
 
@@ -173,15 +180,33 @@ window.addEventListener('resize', (event) => {
 
 container.addEventListener('click', async (event) => {
     if (event.target.matches('.view-approval-button')) {
-        // axios.get(`/workspace/${item.dataset.approvalId}`)
-        // .then(response => {})
-        // .catch(error => {console.error("Error fetching approval:", error);
-        // });
-        overlay.style.display = 'block';
-        approvalBox.style.display = 'block';
-    } else if (event.target.closest('.items')) {
+        attachmentsContainer.innerHTML = "";
+        commentsContainer.innerHTML = "";
+        let response;
         try {
-            response = await axios.get(`/rounds/${event.target.closest('.items').dataset.roundId}`);
+            response = await axios.get(`/workspace/${container.dataset.workspaceId}/pending-approvals/${event.target.closest('.items').dataset.roundId}`);
+            approvalTitle.textContent = response.data.title;
+            subject.textContent = `Subject: ${response.data.subject}`;
+            initiatedBy.textContent = `Initiated by: ${response.data.initiatedBy}`;
+            body.textContent = response.data.body;
+            response.data.attachmentLinks.forEach(attachment => {
+                attachmentsContainer.insertAdjacentHTML('beforeend', `<li class="list-group-item flex-item"><a href="${attachment[1]}">${attachment[0]}</a></li>`);
+            });
+            response.data.comments.forEach(data => {
+                commentsContainer.insertAdjacentHTML('beforeend',`
+                    <li class="comment">${data.content}</li>
+                    <p class="author text-muted">- ${data.author}</p>    
+                `);
+            });
+            overlay.style.display = 'block';
+            approvalBox.style.display = 'block';
+        } catch (error) {
+            console.error(error);
+        }
+    } else if (event.target.closest('.items')) {
+        let response;
+        try {
+            response = await axios.get(`/workspace/${container.dataset.workspaceId}/rounds/${event.target.closest('.items').dataset.roundId}`);
             roundName.textContent = response.data.roundName;
             levelsContainer.innerHTML = '';
             overlay.style.display = 'block';
@@ -253,7 +278,7 @@ addLevel.addEventListener('click', (event) => {
                 </div>
             </div>
             <label for="addMembers${numChild+1}" class="form-label">Members (comma separated emails)</label>
-            <input type="text" class="form-control add-members-textbox" id="addMembers${numChild+1}" aria-describedby="addLevelHelp" placeholder="example1@gmail.com, example2@gmail.com, ...">
+            <input type="text" name="addMembers${numChild+1}" class="form-control add-members-textbox" id="addMembers${numChild+1}" aria-describedby="addLevelHelp" placeholder="example1@gmail.com, example2@gmail.com, ...">
         </div>
     `);
 });

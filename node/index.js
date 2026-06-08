@@ -8,6 +8,8 @@ import session from 'express-session';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
+import upload from './upload';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -297,7 +299,7 @@ app.post('/workspace/:workspaceId/pending-approvals/:approvalId/comments', async
     }
 });
 
-app.get('/workspace/:workspaceId/rounds', (req, res) => {
+app.get('/workspace/:workspaceId/rounds', async (req, res) => {
     const workspaceId = req.params.workspaceId;
     // here-here
     // const approvalRounds = [
@@ -336,11 +338,12 @@ app.get('/workspace/:workspaceId/rounds', (req, res) => {
         lastName: req.session.user.lastName,
         email: req.session.user.email,
         roles: response2,
+        workspaceId: workspaceId,
         approvalRounds: response
     });
 });
 
-app.get('/workspace/:workspaceId/rounds/:roundId', (req, res) => {
+app.get('/workspace/:workspaceId/rounds/:roundId', async (req, res) => {
     const workspaceId = req.params.workspaceId;
     const roundId = req.params.roundId;
 
@@ -439,7 +442,42 @@ app.get('/workspace/:workspaceId/rounds/:roundId', (req, res) => {
     res.json(response);
 });
 
-app.get('/users', (req, res) => {
+app.post('/workspace/:workspaceId/rounds', upload.array('fileAttachment') , async (req, res) => {
+    const workspaceId = req.params.workspaceId;
+    const files = req.files.map(file => ({
+        name: file.originalname,
+        url: file.location
+    }));
+
+    let counter = 1;
+    let levels = [];
+    while (req.body[`inlineRadioOptions${counter}`] && req.body[`addMembers${counter}`]) {
+        levels.push({type: req.body[`inlineRadioOptions${counter}`], members: req.body[`addMembers${counter}`]});
+        counter++;
+    }
+    // here-here
+    try {
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval`, 
+            {
+                user: req.session.user.id, 
+                title: req.body.title,
+                subject: req.body.subject,
+                body: req.body.body,
+                files: files,
+                levels: levels
+            }, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("Spring Boot Communication Error:", error.response?.status, error.message);
+        return res.status(500).send("Could not fetch data from the backend.");
+    }
+});
+
+app.get('/users', async (req, res) => {
     // const response = [
     //     {
     //         "id": 1,
