@@ -26,16 +26,16 @@
             <a class="nav-link workspaces-link" href="/">Workspaces</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link pending-approval-link" href="/workspace">Pending Approvals</a>
+                <a class="nav-link pending-approval-link" href="/workspace/<%= workspaceId %>/pending-approvals">Pending Approvals</a>
             </li>
             <% if (roles.some(role => ['admin'].includes(role))) {%>
                 <li class="nav-item">
-                    <a class="nav-link approval-rounds-link" href="/rounds">Approval Rounds</a>
+                    <a class="nav-link approval-rounds-link" href="/workspace/<%= workspaceId %>/rounds">Approval Rounds</a>
                 </li>
             <% } %>
             <% if (roles.some(role => ['admin'].includes(role))) {%>
                 <li class="nav-item">
-                    <a class="nav-link users-link" href="/users">Users</a>
+                    <a class="nav-link users-link" href="/workspace/<%= workspaceId %>/users">Users</a>
                 </li>
             <% } %>
         </ul>
@@ -43,7 +43,7 @@
         <div class="account-info">
             <p class="full-name"><%= firstName + ' ' + lastName %></p>
             <p><%= email %></p>
-            <button type="button" class="btn btn-danger">Log Out</button>
+            <a href="/auth/logout" class="btn btn-danger">Log Out</a>
         </div>
         </div>
     </div>

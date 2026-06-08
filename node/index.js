@@ -8,7 +8,7 @@ import session from 'express-session';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-import upload from './upload';
+import upload from './upload.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -70,9 +70,17 @@ app.get('/auth/callback', async (req, res) => {
         const { access_token, id_token } = tokenResponse.data;
         const decodedUser = jwtDecode(id_token);
 
+        req.session.accessToken = access_token;
+        req.session.idToken = id_token;
+        req.session.user = {
+            email: decodedUser.email,
+            firstName: decodedUser.given_name,
+            lastName: decodedUser.family_name
+        };
+        
         // here-here
         try {
-            await axios.post(`${process.env.SPRINGBOOT_URL}/api/users`, {
+            await axios.post(`${process.env.SPRINGBOOT_URL}/api/create-user`, {
                 email: decodedUser.email,
                 firstName: decodedUser.given_name,
                 lastName: decodedUser.family_name
@@ -83,15 +91,7 @@ app.get('/auth/callback', async (req, res) => {
             console.error("Failed to create user in DB:", error.response?.status, error.message);
             return res.status(500).send("Authentication failed");
         }
-
-        req.session.accessToken = access_token;
-        req.session.idToken = id_token;
-        req.session.user = {
-            email: decodedUser.email,
-            firstName: decodedUser.given_name,
-            lastName: decodedUser.family_name
-        };
-
+       
         // here-here
         let dbResponse;
         try {
@@ -273,7 +273,7 @@ app.post('/workspace/:workspaceId/pending-approvals/:approvalId', async (req, re
                 'Authorization': `Bearer ${req.session.accessToken}`
             }
         });
-        res.status(200).json({ success: true });
+        res.redirect(`/workspace/${workspaceId}/pending-approvals`);
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
         return res.status(500).send("Could not fetch data from the backend.");
@@ -337,9 +337,9 @@ app.get('/workspace/:workspaceId/rounds', async (req, res) => {
         firstName: req.session.user.firstName,
         lastName: req.session.user.lastName,
         email: req.session.user.email,
-        roles: response2,
+        roles: response2.data,
         workspaceId: workspaceId,
-        approvalRounds: response
+        approvalRounds: response.data
     });
 });
 
@@ -439,7 +439,7 @@ app.get('/workspace/:workspaceId/rounds/:roundId', async (req, res) => {
         return res.status(500).send("Could not fetch data from the backend.");
     }
 
-    res.json(response);
+    res.json(response.data);
 });
 
 app.post('/workspace/:workspaceId/rounds', upload.array('fileAttachment') , async (req, res) => {
@@ -470,14 +470,14 @@ app.post('/workspace/:workspaceId/rounds', upload.array('fileAttachment') , asyn
                 'Authorization': `Bearer ${req.session.accessToken}`
             }
         });
-        res.status(200).json({ success: true });
+        res.redirect(`/workspace/${workspaceId}/rounds`);
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
         return res.status(500).send("Could not fetch data from the backend.");
     }
 });
 
-app.get('/users', async (req, res) => {
+app.get('/workspace/:workspaceId/users', async (req, res) => {
     // const response = [
     //     {
     //         "id": 1,
@@ -620,6 +620,8 @@ app.get('/users', async (req, res) => {
     //         "roles": ["addUser", "removeUser"]
     //     }
     // ];
+    
+    const workspaceId = req.params.workspaceId;
 
     let response;
     let response2;
@@ -638,9 +640,59 @@ app.get('/users', async (req, res) => {
         firstName: req.session.user.firstName,
         lastName: req.session.user.lastName,
         email: req.session.user.email,
-        roles: response2,
-        users: response
+        roles: response2.data,
+        workspaceId: workspaceId,
+        users: response.data
     });
+});
+
+app.post('/workspace/:workspaceId/users', async (req, res) => {
+    const workspaceId = req.params.workspaceId;
+    try {
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/`, 
+            {users: req.body.addMembers}, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        res.redirect(`/workspace/${workspaceId}/users`);
+    } catch (error) {
+        console.error("Spring Boot Communication Error:", error.response?.status, error.message);
+        return res.status(500).send("Could not fetch data from the backend.");
+    }
+});
+
+app.delete('/workspace/:workspaceId/users/:userId', async (req, res) => {
+    const workspaceId = req.params.workspaceId;
+    const userId = req.params.userId;
+    try {
+        await axios.delete(`${process.env.SPRINGBOOT_URL}/api/users/${userId}/workspace/${workspaceId}`, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        res.redirect(`/workspace/${workspaceId}/users`);
+    } catch (error) {
+        console.error("Spring Boot Communication Error:", error.response?.status, error.message);
+        return res.status(500).send("Could not fetch data from the backend.");
+    }
+})
+
+app.post('/workspace/:workspaceId/users/:userId/roles', async (req, res) => {
+    const workspaceId = req.params.workspaceId;
+    const userId = req.params.userId;
+
+    try {
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${userId}/workspace/${workspaceId}/roles`, {roles: req.body.roles}, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("Spring Boot Communication Error:", error.response?.status, error.message);
+        return res.status(500).send("Could not fetch data from the backend.");
+    }
 });
 
 app.listen(PORT, () => {

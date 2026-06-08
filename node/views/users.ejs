@@ -4,9 +4,9 @@
 
 <div class="add-users-modal">
     <i class="fa-regular fa-circle-xmark close-forms"></i>
-    <form action="" method="post">
+    <form action="/workspace/<%= workspaceId %>/users" method="post">
         <h5 class="add-users-heading">Add Members (comma separated emails)</h5>
-        <textarea id="addMembers" class="form-control add-users-text-box" placeholder="example1@gmail.com, example2@gmail.com, ..."></textarea>
+        <textarea id="addMembers" name="addMembers" class="form-control add-users-text-box" placeholder="example1@gmail.com, example2@gmail.com, ..."></textarea>
         <button type="submit" class="btn btn-primary">Invite</button>
     </form>
 </div>
@@ -25,7 +25,7 @@
     <button type="button" class="btn btn-primary save-button">Save</button>
 </div>
 
-<ul class="list-group container">
+<ul class="list-group container" data-workspace-id="<%= workspaceId %>">
     <li class="list-group-item add-user-button"><i class="fa-solid fa-plus"></i></li>
     <% for (let i = 0; i < users.length; i++) { %>
         <li class="list-group-item items" data-user-data="<%= JSON.stringify(users[i]) %>">

@@ -1,5 +1,4 @@
 const approvalRoundsLink = document.querySelector('.approval-rounds-link');
-const viewApprovalButtons = document.querySelectorAll('.view-approval-button');
 const overlay = document.querySelector('.overlay');
 const closeFormss = document.querySelectorAll('.close-forms');
 const approvalBox = document.querySelector('.approval-box');
@@ -18,6 +17,8 @@ const initiatedBy = document.querySelector('.initiated-by');
 const body = document.querySelector('.body');
 const attachmentsContainer = document.querySelector('.attachments-container');
 const commentsContainer = document.querySelector('.comments-container');
+const postButton = document.querySelector('.post-button');
+const userComment = document.querySelector('.user-comment');
 
 
 approvalRoundsLink.classList.add('active');
@@ -204,9 +205,9 @@ container.addEventListener('click', async (event) => {
             console.error(error);
         }
     } else if (event.target.closest('.items')) {
-        let response;
         try {
             response = await axios.get(`/workspace/${container.dataset.workspaceId}/rounds/${event.target.closest('.items').dataset.roundId}`);
+            approvalBox.dataset.approvalId = event.target.closest('.items').dataset.roundId;
             roundName.textContent = response.data.roundName;
             levelsContainer.innerHTML = '';
             overlay.style.display = 'block';
@@ -228,6 +229,19 @@ container.addEventListener('click', async (event) => {
                     });
                 });
             });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+});
+
+postButton.addEventListener('click', async (event) => {
+    if (userComment.value.trim() !== '') {
+        try {
+            await axios.post(`/workspace/${container.dataset.workspaceId}/pending-approvals/${approvalBox.dataset.approvalId}/comments`, {
+                comment: userComment.value
+            });
+            userComment.value = '';
         } catch (error) {
             console.error(error);
         }
@@ -302,11 +316,11 @@ levelsContainer.addEventListener('click', (event) => {
         popover = bootstrap.Popover.getInstance(event.target);
         if (!popover) {
             tempNode = response.data.levels.find(lvl => lvl.id == event.target.dataset.levelId).nodes.find(nde => nde.id == event.target.dataset.nodeId);
-            if (tempNode.status === 'Approved') {
+            if (tempNode.status === 'approved') {
                 color = 'success';
-            } else if (tempNode.status === 'Pending') {
+            } else if (tempNode.status === 'pending') {
                 color = 'secondary';
-            } else if (tempNode.status === 'Rejected') {
+            } else if (tempNode.status === 'rejected') {
                 color = 'danger';
             }
             popover = new bootstrap.Popover(event.target, {
@@ -316,7 +330,7 @@ levelsContainer.addEventListener('click', (event) => {
                 content: `
                     <h6>${tempNode.userName}</h6>
                     <p>${tempNode.userMail}</p>
-                    ${tempNode.status === 'Pending' ? `<button type="button" class="btn btn-primary btn-sm mx-auto d-block">Postpone</button>` : ''}
+                    ${tempNode.status === 'pending' ? `<button type="button" class="btn btn-primary btn-sm mx-auto d-block">Postpone</button>` : ''}
                 `,
                 trigger: 'manual',
                 customClass: `popover-font text-${color}`

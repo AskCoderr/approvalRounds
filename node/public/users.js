@@ -6,6 +6,7 @@ const addUserButton = document.querySelector('.add-user-button');
 const closeFormss = document.querySelectorAll('.close-forms');
 const roleEditorHeading = document.querySelector('.role-editor-heading');
 const addUsersModal = document.querySelector('.add-users-modal');
+const saveButton = document.querySelector('.save-button');
 
 let popover, userData;
 
@@ -23,7 +24,7 @@ container.addEventListener('click', (event) => {
                 sanitize: false,
                 html: true,
                 content:  ` <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                <button type="button" class="btn btn-warning">Yes</button>
+                                <button type="button" class="btn btn-warning confirm-remove" data-user-id="${JSON.parse(event.target.closest('.items').dataset.userData).id}">Yes</button>
                                 <button type="button" class="btn btn-info reject-cancel-btn">No</button>
                             </div>`,
                 trigger: 'focus'                
@@ -37,6 +38,7 @@ container.addEventListener('click', (event) => {
         overlay.style.display = 'block';
         roleEditor.style.display = 'block';
         userData = JSON.parse(event.target.closest('li').dataset.userData);
+        roleEditor.dataset.userId = userData.id;
         roleEditorHeading.textContent = userData.userName;
         userData.roles.forEach(role => {
             document.querySelector(`#${role}`).checked = true;
@@ -68,4 +70,32 @@ overlay.addEventListener('click', (event) => {
     overlay.style.display = 'none';
     roleEditor.style.display = 'none';
     addUsersModal.style.display = 'none';
+});
+
+document.addEventListener('click', async (event) => {
+    if (event.target.matches('.confirm-remove')) {
+        try {
+            await axios.delete(`/workspace/${container.dataset.workspaceId}/users/${event.target.dataset.userId}`);
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+        } 
+    }
+});
+
+saveButton.addEventListener('click', async (event) => {
+    const checkedRoles = [];
+    document.querySelectorAll('.roles-container input[type="checkbox"]').forEach(checkbox => {
+        if (checkbox.checked) {
+            checkedRoles.push(checkbox.id);
+        }
+    });
+    try {
+        await axios.post(`/workspace/${container.dataset.workspaceId}/users/${roleEditor.dataset.userId}/roles`, {
+            roles: checkedRoles
+        });
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
+    }
 });

@@ -94,7 +94,7 @@ document.addEventListener('click', async (event) => {
         rejectPopover.hide();
     } else if (event.target.matches('.approve-cancel-btn')) {
         approvePopover.hide();
-    } else if (event.target.matches('.reject-confirm-button')) {
+    } else if (event.target.matches('.reject-confirm-btn')) {
         try {
             await axios.post(`/workspace/${container.dataset.workspaceId}/pending-approvals/${approvalBox.dataset.approvalId}`, {
                 status: "rejected"
@@ -103,7 +103,7 @@ document.addEventListener('click', async (event) => {
         } catch (error) {
             console.error(error);
         }
-    } else if (event.target.matches('.approve-confirm-button')) {
+    } else if (event.target.matches('.approve-confirm-btn')) {
         try {
             await axios.post(`/workspace/${container.dataset.workspaceId}/pending-approvals/${approvalBox.dataset.approvalId}`, {
                 status: "approved"

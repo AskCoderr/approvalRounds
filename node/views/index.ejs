@@ -6,7 +6,7 @@
     <div class="account-info">
         <p class="full-name"><%= firstName + ' ' + lastName %></p>
         <p><%= email %></p>
-        <button type="button" class="btn btn-danger">Log Out</button>
+        <a href="/auth/logout" class="btn btn-danger">Log Out</a>
     </div>
 </div>
 
@@ -49,7 +49,7 @@
 <ul class="list-group container">
     <li class="list-group-item add-workspace-button"><i class="fa-solid fa-plus"></i></li>
     <% for (let i = 0; i < workspaces.length; i++) { %>
-        <li class="list-group-item items" data-workspace-id=<%= workspaces[i].id %>>
+        <li class="list-group-item items" data-workspace-id="<%= workspaces[i].id %>">
             <p class="company-name"><%= `${i+1}.   ` + workspaces[i].title %></p>
             <div>
                 <span class="badge text-bg-primary rounded-pill"><%if (workspaces[i].pending) {%> <%= workspaces[i].pending %> <% } %></span>
