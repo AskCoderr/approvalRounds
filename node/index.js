@@ -102,7 +102,7 @@ app.get('/auth/callback', async (req, res) => {
             });
         } catch (error) {
             console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-            return res.status(500).send("Could not fetch data from the backend.");
+            return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
         }
         req.session.user.id = dbResponse.data;
 
@@ -121,7 +121,7 @@ app.get('/auth/logout', (req, res) => {
 app.use(requireAuth);
 
 app.get('/', async (req, res) => {
-    // here-here
+    // done
     let response;
     try {
         response = await axios.get(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace`, {
@@ -131,7 +131,7 @@ app.get('/', async (req, res) => {
         });
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 
     res.render('index', {
@@ -143,6 +143,7 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/create-workspace', async (req, res) => {
+    // done
     const { workspaceName, members } = req.body;
     try {
         await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace`, {workspaceName, members}, {
@@ -153,15 +154,15 @@ app.post('/create-workspace', async (req, res) => {
         res.status(200).json({ success: true });
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
-    }
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");    }
 });
 
 app.patch('/workspace/:workspaceId/name/:name', async (req, res) => {
+    // done
     const workspaceId = req.params.workspaceId;
     const name = req.params.name;
     try {
-        await axios.patch(`${process.env.SPRINGBOOT_URL}/api/workspace/${workspaceId}/name/${name}`, {}, {
+        await axios.patch(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/name/${name}`, {}, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
             }
@@ -169,7 +170,7 @@ app.patch('/workspace/:workspaceId/name/:name', async (req, res) => {
         res.status(200).json({ success: true });
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 });
 
@@ -184,7 +185,7 @@ app.delete('/workspace/:id', async (req, res) => {
         res.status(200).json({ success: true });
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 });
 
@@ -203,7 +204,7 @@ app.get('/workspace/:workspaceId/pending-approvals', async (req, res) => {
         ]);
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 
     res.render('workspace', {
@@ -254,7 +255,7 @@ app.get('/workspace/:workspaceId/pending-approvals/:apprId', async (req, res) =>
         });
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 
     res.json(response.data);
@@ -276,7 +277,7 @@ app.post('/workspace/:workspaceId/pending-approvals/:approvalId', async (req, re
         res.redirect(`/workspace/${workspaceId}/pending-approvals`);
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 });
 
@@ -295,7 +296,7 @@ app.post('/workspace/:workspaceId/pending-approvals/:approvalId/comments', async
         res.status(200).json({ success: true });
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 });
 
@@ -330,7 +331,7 @@ app.get('/workspace/:workspaceId/rounds', async (req, res) => {
         ]);
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 
     res.render('rounds', {
@@ -436,7 +437,7 @@ app.get('/workspace/:workspaceId/rounds/:roundId', async (req, res) => {
         });
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 
     res.json(response.data);
@@ -473,7 +474,7 @@ app.post('/workspace/:workspaceId/rounds', upload.array('fileAttachment') , asyn
         res.redirect(`/workspace/${workspaceId}/rounds`);
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 });
 
@@ -633,7 +634,7 @@ app.get('/workspace/:workspaceId/users', async (req, res) => {
         ]);
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 
     res.render('users.ejs', {
@@ -658,7 +659,7 @@ app.post('/workspace/:workspaceId/users', async (req, res) => {
         res.redirect(`/workspace/${workspaceId}/users`);
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 });
 
@@ -674,7 +675,7 @@ app.delete('/workspace/:workspaceId/users/:userId', async (req, res) => {
         res.redirect(`/workspace/${workspaceId}/users`);
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 })
 
@@ -691,7 +692,7 @@ app.post('/workspace/:workspaceId/users/:userId/roles', async (req, res) => {
         res.status(200).json({ success: true });
     } catch (error) {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
-        return res.status(500).send("Could not fetch data from the backend.");
+        return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
 });
 

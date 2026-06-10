@@ -1,6 +1,6 @@
 create type approval_status as enum ('pending', 'approved', 'rejected');
 create type level_type as enum ('series', 'parallel_any', 'parallel_all');
-create type user_role as enum ('admin', 'approvalCreator', 'editRoles', 'removeUser', 'addUser');
+create type user_role as enum ('admin', 'approvalCreator', 'editRoles', 'removeUser', 'addUser', 'member');
 
 create table workspaces (
     id serial primary key,
@@ -43,7 +43,7 @@ create table node_data (
 create table roles (
     user_id int references users(id),
     workspace_id int references workspaces(id),
-    role user_role not null,
+    role_name user_role not null,
     primary key (user_id, workspace_id, role)
 );
 

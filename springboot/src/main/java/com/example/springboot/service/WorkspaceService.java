@@ -5,6 +5,9 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.springboot.exception.ForbiddenException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +20,7 @@ public class WorkspaceService {
         return jdbcTemplate.queryForList(
             """
         with workspace_mapping as
-        (select w.name, w.id from (select DISTINCT workspace_id from roles where user_id=?) as wid
+        (select w.name, w.id from (select workspace_id from roles where user_id=? and role_name='member') as wid
         inner join workspaces as w on wid.workspace_id=w.id), 
         approval_mapping as 
         (select ar.workspace_id from (select * from pending_approvals where user_id=?) as apprid 
@@ -28,5 +31,30 @@ public class WorkspaceService {
         group by workspace_mapping.id, workspace_mapping.name;
             """,
         userId, userId);
+    }
+
+    @Transactional
+    public void createWorkspace(Long userId, Map<String, Object> createWorkspaceData) {
+        // create workspace and get id
+        Long workspaceId = jdbcTemplate.queryForObject("insert into workspaces (name) values (?) returning id", Long.class, createWorkspaceData.get("workspaceName"));
+        
+        // add member and admin privileges to creator
+        jdbcTemplate.update("insert into roles (user_id, workspace_id, role_name) values (?, ?, 'member')", userId, workspaceId);
+        jdbcTemplate.update("insert into roles (user_id, workspace_id, role_name) values (?, ?, 'admin')", userId, workspaceId);
+        
+        // assign member privileges to each email if it exists
+        String[] emails = ((String) createWorkspaceData.get("members")).split(",");
+        jdbcTemplate.update("insert into roles (user_id, workspace_id, role_name) select id, ?, 'member' from users where email=ANY(?)", workspaceId, emails);
+    }
+
+    public void updateWorkspaceName(Long userId, Long workspaceId, String name) {
+        // check whether user has admin role_name in workspace, 
+            // if not send forbiddenException 
+            // otherwise update workspace name
+        if (jdbcTemplate.queryForObject("select exists (select 1 from roles where user_id=? and workspace_id=? and role_name='admin')", Boolean.class, userId, workspaceId)) {
+            jdbcTemplate.update("update workspaces set name=? where id=?", name, workspaceId);
+        } else {
+            throw new ForbiddenException("Access Denied");
+        }
     }
 }

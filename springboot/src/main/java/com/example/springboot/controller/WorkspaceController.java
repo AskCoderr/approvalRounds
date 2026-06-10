@@ -3,6 +3,7 @@ package com.example.springboot.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 
 @RequiredArgsConstructor
@@ -29,8 +31,15 @@ public class WorkspaceController {
     }
     
 
-    // @PostMapping
-    // public ResponseEntity<Void> createWorkspace (@PathVariable int userId, @RequestBody Map<String, Object> createWorkspaceData) {
-        
-    // }
+    @PostMapping
+    public ResponseEntity<Void> createWorkspace(@PathVariable Long userId, @RequestBody Map<String, Object> createWorkspaceData) {
+        workspaceService.createWorkspace(userId, createWorkspaceData);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping("/{workspaceId}/name/{name}")
+    public ResponseEntity<Void> updateWorkspaceName(@PathVariable Long userId, @PathVariable Long workspaceId, @PathVariable String name) {
+        workspaceService.updateWorkspaceName(userId, workspaceId, name);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
