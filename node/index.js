@@ -124,7 +124,7 @@ app.get('/', async (req, res) => {
     // here-here
     let response;
     try {
-        response = await axios.get(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/info-workspaces`, {
+        response = await axios.get(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace`, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
             }
@@ -145,7 +145,7 @@ app.get('/', async (req, res) => {
 app.post('/create-workspace', async (req, res) => {
     const { workspaceName, members } = req.body;
     try {
-        await axios.post(`${process.env.SPRINGBOOT_URL}/api/create_workspace`, {workspaceName, members, createdBy: req.session.user.id}, {
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace`, {workspaceName, members}, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
             }

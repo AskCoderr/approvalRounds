@@ -4,7 +4,7 @@ create type user_role as enum ('admin', 'approvalCreator', 'editRoles', 'removeU
 
 create table workspaces (
     id serial primary key,
-    name varchar(100) not null
+    name varchar(100) not null,
 );
 
 create table users (
@@ -23,7 +23,7 @@ create table approval_rounds (
     body text,
     status approval_status default 'pending',
     created_at timestamp default current_timestamp
-);
+);  
 
 create table level_data (
     id serial primary key,
