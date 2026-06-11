@@ -188,14 +188,14 @@ container.addEventListener('click', async (event) => {
             response = await axios.get(`/workspace/${container.dataset.workspaceId}/pending-approvals/${event.target.closest('.items').dataset.roundId}`);
             approvalTitle.textContent = response.data.title;
             subject.textContent = `Subject: ${response.data.subject}`;
-            initiatedBy.textContent = `Initiated by: ${response.data.initiatedBy}`;
+            initiatedBy.textContent = `Initiated by: ${response.data.initiated_by}`;
             body.textContent = response.data.body;
-            response.data.attachmentLinks.forEach(attachment => {
-                attachmentsContainer.insertAdjacentHTML('beforeend', `<li class="list-group-item flex-item"><a href="${attachment[1]}">${attachment[0]}</a></li>`);
+            response.data.attachment_links.forEach(attachment => {
+                attachmentsContainer.insertAdjacentHTML('beforeend', `<li class="list-group-item flex-item"><a href="${attachment.file_url}">${attachment.original_name}</a></li>`);
             });
             response.data.comments.forEach(data => {
                 commentsContainer.insertAdjacentHTML('beforeend',`
-                    <li class="comment">${data.content}</li>
+                    <li class="comment">${data.comment}</li>
                     <p class="author text-muted">- ${data.author}</p>    
                 `);
             });

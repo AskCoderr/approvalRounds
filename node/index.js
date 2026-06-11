@@ -238,27 +238,27 @@ app.get('/workspace/:workspaceId/pending-approvals/:apprId', async (req, res) =>
     const workspaceId = req.params.workspaceId;
     const apprId = req.params.apprId;
 
-    // here-here
+    // done
     // collect approval id data from database
 
     // const approvalData = {
     //     id: id,
     //     title: "Engineering Procurement Request",
     //     subject: "Procure High-Speed Camera Lenses for Seam Tracking",
-    //     initiatedBy: "Anand Narayan",
+    //     initiated_by: "Anand Narayan",
     //     body: "Requesting budget clearance for the procurement of high-speed optical lenses required for real-time computer vision analysis and cricket ball seam tracking modules.",
-    //     attachmentLinks: [
-    //         ["first.pdf", "https://storage.internal/docs/lens_specifications.pdf"],
-    //         ["second.pdf", "https://storage.internal/quotes/vendor_pricing_v2.xlsx"]
+    //     attachment_links: [
+    //         {original_name:"first.pdf", file_url: "https://storage.internal/docs/lens_specifications.pdf"},
+    //         {original_name: "second.pdf", file_url: "https://storage.internal/quotes/vendor_pricing_v2.xlsx"}
     //     ],
     //     comments: [
     //         {
     //             author: "Siddharth Kumar",
-    //             content: "Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters."
+    //             comment: "Verified core specifications. Lens focal length aligns with the ESP32-CAM frame field parameters."
     //         },
     //         {
     //             author: "Meera Nair",
-    //             content: "Please attach the secondary vendor quotation string before final allocation approval."
+    //             comment: "Please attach the secondary vendor quotation string before final allocation approval."
     //         }
     //     ]
     // };
@@ -283,7 +283,7 @@ app.post('/workspace/:workspaceId/pending-approvals/:approvalId', async (req, re
     const approvalId = req.params.approvalId;
     const status = req.body.status;
 
-    // here-here
+    // come-back to this later
     try {
         await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval/${approvalId}`, 
             {status: status}, {
@@ -302,10 +302,10 @@ app.post('/workspace/:workspaceId/pending-approvals/:approvalId/comments', async
     const workspaceId = req.params.workspaceId;
     const approvalId = req.params.approvalId;
     const comment = req.body.comment;
-    // here-here
+    // done
     try {
         await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval/${approvalId}/comments`, 
-            {user: req.session.user.id, comment: comment}, {
+            {comment: comment}, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
             }

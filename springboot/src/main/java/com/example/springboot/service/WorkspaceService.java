@@ -1,6 +1,5 @@
 package com.example.springboot.service;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -78,32 +77,6 @@ public class WorkspaceService {
         } else {
             throw new ForbiddenException("Access Denied");
         }
-    }
-
-    private String calculateTimeAgo(LocalDateTime dateTime) {
-        LocalDateTime now = LocalDateTime.now();
-        long minutes = ChronoUnit.MINUTES.between(dateTime, now);
-        long hours = ChronoUnit.HOURS.between(dateTime, now);
-        long days = ChronoUnit.DAYS.between(dateTime, now);
-
-        if (minutes < 60) return minutes + " minutes ago";
-        if (hours < 24) return hours + " hours ago";
-        return days + " days ago";
-    }
-
-    public List<Map<String, Object>> getPendingApprovals(Long userId, Long workspaceId) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("""
-            select ar.id, ar.title, ar.subject, ar.first_name || ' ' || ar.last_name as author, pa.arrived_at as time_ago
-            from (select a.workspace_id, a.id, a.title, a.subject, u.first_name, u.last_name from approval_rounds as a
-            inner join users as u on a.user_id = u.id) as ar inner join pending_approvals as pa
-            on ar.id = pa.appr_id where pa.user_id=? and ar.workspace_id=?
-        """, userId, workspaceId);
-
-        for (Map<String, Object> row : rows) {
-            LocalDateTime arrivedAt = ((Timestamp) row.get("time_ago")).toLocalDateTime();
-            row.put("time_ago", calculateTimeAgo(arrivedAt));
-        }
-        return rows;
     }
 
     public List<String> getRoles(Long userId, Long workspaceId) {

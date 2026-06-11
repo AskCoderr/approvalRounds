@@ -54,15 +54,9 @@ public class WorkspaceController {
     public List<Map<String, Object>> getRedundantFiles(@PathVariable Long userId, @PathVariable Long workspaceId) {
         return workspaceService.getRedundantFiles(userId, workspaceId);
     }
-
-    @GetMapping("/{workspaceId}/pending-approvals")
-    public List<Map<String, Object>> getPendingApprovals(@PathVariable Long userId, @PathVariable Long workspaceId) {
-        return workspaceService.getPendingApprovals(userId, workspaceId);
-    }
     
     @GetMapping("/{workspaceId}/roles")
     public List<String> getRoles(@PathVariable Long userId, @PathVariable Long workspaceId) {
         return workspaceService.getRoles(userId, workspaceId);
     }
-    
 }
