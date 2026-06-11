@@ -319,7 +319,7 @@ app.post('/workspace/:workspaceId/pending-approvals/:approvalId/comments', async
 
 app.get('/workspace/:workspaceId/rounds', async (req, res) => {
     const workspaceId = req.params.workspaceId;
-    // here-here
+    // done
     // const approvalRounds = [
     //     { id: 1, name: "Engineering Procurement Request", author: "You", status: "pending", createdAt: "2026-05-28" },
     //     { id: 2, name: "Marketing Budget Allocation Q2", author: "Sarah Mitchell", status: "approved", createdAt: "2026-05-27" },
@@ -365,7 +365,7 @@ app.get('/workspace/:workspaceId/rounds/:roundId', async (req, res) => {
     const workspaceId = req.params.workspaceId;
     const roundId = req.params.roundId;
 
-    // here-here
+    // done
     // fetch data from database
 
     // const response = {
@@ -473,11 +473,10 @@ app.post('/workspace/:workspaceId/rounds', upload.array('fileAttachment') , asyn
         levels.push({type: req.body[`inlineRadioOptions${counter}`], members: req.body[`addMembers${counter}`]});
         counter++;
     }
-    // here-here
+    // done
     try {
-        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval`, 
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/rounds`, 
             {
-                user: req.session.user.id, 
                 title: req.body.title,
                 subject: req.body.subject,
                 body: req.body.body,
@@ -496,6 +495,7 @@ app.post('/workspace/:workspaceId/rounds', upload.array('fileAttachment') , asyn
 });
 
 app.get('/workspace/:workspaceId/users', async (req, res) => {
+    // done
     // const response = [
     //     {
     //         "id": 1,
@@ -665,9 +665,10 @@ app.get('/workspace/:workspaceId/users', async (req, res) => {
 });
 
 app.post('/workspace/:workspaceId/users', async (req, res) => {
+    // done
     const workspaceId = req.params.workspaceId;
     try {
-        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/`, 
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}`, 
             {users: req.body.addMembers}, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
@@ -681,10 +682,26 @@ app.post('/workspace/:workspaceId/users', async (req, res) => {
 });
 
 app.delete('/workspace/:workspaceId/users/:userId', async (req, res) => {
+    // 
     const workspaceId = req.params.workspaceId;
     const userId = req.params.userId;
+    let fileResponse;
     try {
-        await axios.delete(`${process.env.SPRINGBOOT_URL}/api/users/${userId}/workspace/${workspaceId}`, {
+        fileResponse = await axios.get(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/users/${userId}/files`, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        const files = fileResponse.data;
+        await Promise.all(files.map(async (file) => {
+            const key = file.file_url.substring(file.file_url.lastIndexOf("/") + 1);
+            await s3.send(new DeleteObjectCommand({
+                Bucket: process.env.S3_BUCKET_NAME,
+                Key: key
+            }));
+        }));
+
+        await axios.delete(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/users/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
             }
@@ -694,7 +711,7 @@ app.delete('/workspace/:workspaceId/users/:userId', async (req, res) => {
         console.error("Spring Boot Communication Error:", error.response?.status, error.message);
         return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
     }
-})
+});
 
 app.post('/workspace/:workspaceId/users/:userId/roles', async (req, res) => {
     const workspaceId = req.params.workspaceId;

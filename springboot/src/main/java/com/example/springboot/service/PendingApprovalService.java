@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class PendingApprovalService {
     private final JdbcTemplate jdbcTemplate;
 
-    public List<Map<String, Object>> getPendingApprovals(Long userId, Long workspaceId) {
+    public List<Map<String, Object>> getPendingApprovals(Integer userId, Integer workspaceId) {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList("""
             select ar.id, ar.title, ar.subject, ar.first_name || ' ' || ar.last_name as author, pa.arrived_at as time_ago
             from (select a.workspace_id, a.id, a.title, a.subject, u.first_name, u.last_name from approval_rounds as a
@@ -44,7 +44,7 @@ public class PendingApprovalService {
         return days + " days ago";
     }
 
-    public Map<String, Object> getPendingApproval(Long userId, Long workspaceId, Long approvalId) {
+    public Map<String, Object> getPendingApproval(Integer userId, Integer workspaceId, Integer approvalId) {
         Boolean permission = jdbcTemplate.queryForObject("""
             select exists (select 1 from pending_approvals where user_id=? and appr_id=?)
                 """, Boolean.class, userId, approvalId);
@@ -71,11 +71,11 @@ public class PendingApprovalService {
         }
     }
 
-    public void approveRejectApproval(Long userId, Long workspaceId, Long approvalId) {
+    public void approveRejectApproval(Integer userId, Integer workspaceId, Integer approvalId) {
         // come back to this later
     }
 
-    public void createComment(Long userId, Long workspaceId, Long approvalId, Map<String, Object> commentData) {
+    public void createComment(Integer userId, Integer workspaceId, Integer approvalId, Map<String, Object> commentData) {
         Boolean permission = jdbcTemplate.queryForObject("""
                     select exists (select 1 from roles where user_id=? and workspace_id=? and role_name='admin')
                 """, Boolean.class, userId, workspaceId);

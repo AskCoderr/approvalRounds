@@ -39,7 +39,7 @@ container.addEventListener('click', (event) => {
         roleEditor.style.display = 'block';
         userData = JSON.parse(event.target.closest('li').dataset.userData);
         roleEditor.dataset.userId = userData.id;
-        roleEditorHeading.textContent = userData.userName;
+        roleEditorHeading.textContent = userData.user_name;
         userData.roles.forEach(role => {
             document.querySelector(`#${role}`).checked = true;
         });
@@ -48,7 +48,7 @@ container.addEventListener('click', (event) => {
         if (!popover) {
             userData = JSON.parse(event.target.closest('li').dataset.userData);
             popover = new bootstrap.Popover(event.target, {
-                title: `${userData.userName}`,
+                title: `${userData.user_name}`,
                 sanitize: false,
                 html: true,
                 content:  ` ${userData.email} `,

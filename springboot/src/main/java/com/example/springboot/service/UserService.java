@@ -16,8 +16,8 @@ public class UserService {
         jdbcTemplate.update("insert into users (email, first_name, last_name) values (?, ?, ?)", (String) body.get("email"), (String) body.get("firstName"), (String) body.get("lastName"));
     }
 
-    public Long getId(String email) {
-        Long id = jdbcTemplate.queryForObject("select id from users where email=?", Long.class ,email);
+    public Integer getId(String email) {
+        Integer id = jdbcTemplate.queryForObject("select id from users where email=?", Integer.class ,email);
         return id;
     }
 }

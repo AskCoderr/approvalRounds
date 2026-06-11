@@ -29,7 +29,7 @@
     <li class="list-group-item add-user-button"><i class="fa-solid fa-plus"></i></li>
     <% for (let i = 0; i < users.length; i++) { %>
         <li class="list-group-item items" data-user-data="<%= JSON.stringify(users[i]) %>">
-            <p class="user-name"><%= users[i].userName %></p>
+            <p class="user-name"><%= users[i].user_name %></p>
             <div class="btn-group" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-success details">Details</button>
                 <button type="button" class="btn btn-warning edit-role">Edit Role</button>

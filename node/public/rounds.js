@@ -75,13 +75,13 @@ function render() {
                 newButton.dataset.levelId = elem.id;
                 if (elem.nodes[i].status === 'approved') {
                     newButton.classList.add('btn', 'btn-success', 'btn-sm', 'node-button', 'text-truncate');
-                    newButton.textContent = elem.nodes[i].firstName;
+                    newButton.textContent = elem.nodes[i].first_name;
                 } else if (elem.nodes[i].status === 'pending') {
                     newButton.classList.add('btn', 'btn-secondary', 'btn-sm', 'node-button', 'text-truncate');
-                    newButton.textContent = elem.nodes[i].firstName;
+                    newButton.textContent = elem.nodes[i].first_name;
                 } else if (elem.nodes[i].status === 'rejected') {
                     newButton.classList.add('btn', 'btn-danger', 'btn-sm', 'node-button', 'text-truncate');
-                    newButton.textContent = elem.nodes[i].firstName;
+                    newButton.textContent = elem.nodes[i].first_name;
                 }
                 newSublevel.appendChild(newButton);
                 if (elem.type === 'series') {
@@ -328,8 +328,8 @@ levelsContainer.addEventListener('click', (event) => {
                 html: true,
                 sanitize: false,
                 content: `
-                    <h6>${tempNode.userName}</h6>
-                    <p>${tempNode.userMail}</p>
+                    <h6>${tempNode.user_name}</h6>
+                    <p>${tempNode.user_mail}</p>
                     ${tempNode.status === 'pending' ? `<button type="button" class="btn btn-primary btn-sm mx-auto d-block">Postpone</button>` : ''}
                 `,
                 trigger: 'manual',

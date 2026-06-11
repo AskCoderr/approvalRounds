@@ -23,24 +23,24 @@ public class PendingApprovalController {
     private final PendingApprovalService pendingApprovalService;
 
     @GetMapping
-    public List<Map<String, Object>> getPendingApprovals(@PathVariable Long userId, @PathVariable Long workspaceId) {
+    public List<Map<String, Object>> getPendingApprovals(@PathVariable Integer userId, @PathVariable Integer workspaceId) {
         return pendingApprovalService.getPendingApprovals(userId, workspaceId);
     }
 
 
     @GetMapping("/{approvalId}")
-    public Map<String, Object> getPendingApproval(@PathVariable Long userId, @PathVariable Long workspaceId, @PathVariable Long approvalId) {
+    public Map<String, Object> getPendingApproval(@PathVariable Integer userId, @PathVariable Integer workspaceId, @PathVariable Integer approvalId) {
         return pendingApprovalService.getPendingApproval(userId, workspaceId, approvalId);
     }
 
     @PostMapping("/{approvalId}")
-    public ResponseEntity<Void> approveRejectApproval(@PathVariable Long userId, @PathVariable Long workspaceId, @PathVariable Long approvalId) {
+    public ResponseEntity<Void> approveRejectApproval(@PathVariable Integer userId, @PathVariable Integer workspaceId, @PathVariable Integer approvalId) {
         // come back to this later
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/{approvalId}/comments")
-    public ResponseEntity<Void> createComment(@PathVariable Long userId, @PathVariable Long workspaceId, @PathVariable Long approvalId, @RequestBody Map<String, Object> commentData) {
+    public ResponseEntity<Void> createComment(@PathVariable Integer userId, @PathVariable Integer workspaceId, @PathVariable Integer approvalId, @RequestBody Map<String, Object> commentData) {
         pendingApprovalService.createComment(userId, workspaceId, approvalId, commentData);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
