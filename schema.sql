@@ -16,8 +16,8 @@ create table users (
 
 create table approval_rounds (
     id serial primary key,
-    user_id int references users(id),
-    workspace_id int references workspaces(id),
+    user_id int references users(id) on delete cascade,
+    workspace_id int references workspaces(id) on delete cascade,
     title varchar(255) not null,
     subject varchar(255),
     body text,
@@ -27,7 +27,7 @@ create table approval_rounds (
 
 create table level_data (
     id serial primary key,
-    appr_id int references approval_rounds(id),
+    appr_id int references approval_rounds(id) on delete cascade,
     level int not null,
     type level_type not null,
     status approval_status default 'pending'
@@ -35,37 +35,37 @@ create table level_data (
 
 create table node_data (
     id serial primary key,
-    level_data_id int references level_data(id),
-    user_id int references users(id),
+    level_data_id int references level_data(id) on delete cascade,
+    user_id int references users(id) on delete cascade,
     status approval_status default 'pending'
 );
 
 create table roles (
-    user_id int references users(id),
-    workspace_id int references workspaces(id),
+    user_id int references users(id) on delete cascade,
+    workspace_id int references workspaces(id) on delete cascade,
     role_name user_role not null,
-    primary key (user_id, workspace_id, role)
+    primary key (user_id, workspace_id, role_name)
 );
 
 create table comments (
     id serial primary key,
-    user_id int references users(id),
-    appr_id int references approval_rounds(id),
+    user_id int references users(id) on delete cascade,
+    appr_id int references approval_rounds(id) on delete cascade,
     comment text not null,
     created_at timestamp default current_timestamp
 );
 
 create table files (
     id serial primary key,
-    appr_id int references approval_rounds(id),
+    appr_id int references approval_rounds(id) on delete cascade,
     file_url varchar(500) not null,
     original_name varchar(255) not null
 );
 
 create table pending_approvals (
     id serial primary key,
-    appr_id int references approval_rounds(id),
-    user_id int references users(id),
+    appr_id int references approval_rounds(id) on delete cascade,
+    user_id int references users(id) on delete cascade,
     arrived_at timestamp default current_timestamp
 );
 

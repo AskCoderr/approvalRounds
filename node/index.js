@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import session from 'express-session';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 import upload from './upload.js';
 
@@ -78,9 +79,9 @@ app.get('/auth/callback', async (req, res) => {
             lastName: decodedUser.family_name
         };
         
-        // here-here
+        // done
         try {
-            await axios.post(`${process.env.SPRINGBOOT_URL}/api/create-user`, {
+            await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/create-user`, {
                 email: decodedUser.email,
                 firstName: decodedUser.given_name,
                 lastName: decodedUser.family_name
@@ -88,11 +89,11 @@ app.get('/auth/callback', async (req, res) => {
                 headers: { 'Authorization': `Bearer ${req.session.accessToken}` }
             });
         } catch (error) {
-            console.error("Failed to create user in DB:", error.response?.status, error.message);
-            return res.status(500).send("Authentication failed");
+            console.error("Spring Boot Communication Error:", error.response?.status, error.message);
+            return res.status(error.response?.status || 500).send(error.response?.data || "Could not fetch data from the backend.");
         }
        
-        // here-here
+        // done
         let dbResponse;
         try {
             dbResponse = await axios.get(`${process.env.SPRINGBOOT_URL}/api/users/${decodedUser.email}/id`, {
@@ -175,9 +176,25 @@ app.patch('/workspace/:workspaceId/name/:name', async (req, res) => {
 });
 
 app.delete('/workspace/:id', async (req, res) => {
+    // done
     const id = req.params.id;
+    let fileResponse;
     try {
-        await axios.delete(`${process.env.SPRINGBOOT_URL}/api/workspace/${id}`, {
+        fileResponse = await axios.get(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${id}/files`, {
+            headers: {
+                'Authorization': `Bearer ${req.session.accessToken}`
+            }
+        });
+        const files = fileResponse.data;
+        await Promise.all(files.map(async (file) => {
+            const key = file.file_url.substring(file.file_url.lastIndexOf("/") + 1);
+            await s3.send(new DeleteObjectCommand({
+                Bucket: process.env.S3_BUCKET_NAME,
+                Key: key
+            }));
+        }));
+
+        await axios.delete(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${id}`, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
             }
@@ -190,8 +207,8 @@ app.delete('/workspace/:id', async (req, res) => {
 });
 
 app.get('/workspace/:workspaceId/pending-approvals', async (req, res) => {
+    // done
     const workspaceId = req.params.workspaceId;
-    // here-here
     // ['admin', 'approvalCreator']
     // list of {id: "appr-001", title: "Engineering Logistics", subject: "Procure High-Speed Camera Lenses", author: "Anand Narayan", date: "2026-05-26", timeAgo: "2 hours ago"}
     let response;
