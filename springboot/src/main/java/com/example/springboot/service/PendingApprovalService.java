@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +48,12 @@ public class PendingApprovalService {
 
     public Map<String, Object> getPendingApproval(Integer userId, Integer workspaceId, Integer approvalId) {
         Boolean permission = jdbcTemplate.queryForObject("""
-            select exists (select 1 from pending_approvals where user_id=? and appr_id=?)
-                """, Boolean.class, userId, approvalId);
-        
+            select (
+                exists (select 1 from roles where user_id=? and workspace_id=? and role_name='admin')
+                or exists (select 1 from approval_rounds where id=? and user_id=?)
+                or exists (select 1 from pending_approvals where user_id=? and appr_id=?)
+            )
+            """, Boolean.class, userId, workspaceId, approvalId, userId, userId, approvalId);
         if (permission) {
             Map<String, Object> response = jdbcTemplate.queryForMap("""
                 select ar.id, ar.title, ar.subject, u.first_name || ' ' || u.last_name as initiated_by,
@@ -127,8 +131,9 @@ public class PendingApprovalService {
         Boolean permission = jdbcTemplate.queryForObject("""
             select exists (select 1 from node_data where id=? and user_id=?)
             """, Boolean.class, nodeId, userId);
-               
+
         if (permission) {
+            try {
             String status = (String) body.get("status");
 
             // get node's level
@@ -145,7 +150,7 @@ public class PendingApprovalService {
 
             // update node status
             jdbcTemplate.update(
-                "UPDATE node_data SET status=? WHERE id=?",
+                "UPDATE node_data SET status=?::approval_status WHERE id=?",
                 status, nodeId
             );
 
@@ -251,6 +256,9 @@ public class PendingApprovalService {
                     jdbcTemplate.update("UPDATE approval_rounds SET status='rejected' WHERE id=?", approvalId);
                 }
             }
+        } catch (Exception e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
         } else {
             throw new ForbiddenException("Access Denied");
         }
@@ -269,7 +277,7 @@ public class PendingApprovalService {
             nextLevel = jdbcTemplate.queryForMap("""
                 SELECT id, type FROM level_data WHERE appr_id=? AND level=?
             """, approvalId, currentLevelNumber + 1);
-        } catch (Exception e) {
+        } catch (EmptyResultDataAccessException e) {
             // no next level exists
         }
 
@@ -288,7 +296,7 @@ public class PendingApprovalService {
                 jdbcTemplate.update("""
                     INSERT INTO pending_approvals (appr_id, user_id, node_id)
                     SELECT ?, user_id, id FROM node_data
-                    WHERE level_data_id=? ORDER BY id LIMIT 1
+                    WHERE level_data_id=? ORDER BY node_order LIMIT 1
                 """, approvalId, nextLevelId);
             } else {
                 // parallel_any or parallel_all - add all nodes
@@ -302,16 +310,14 @@ public class PendingApprovalService {
 
     public void createComment(Integer userId, Integer workspaceId, Integer approvalId, Map<String, Object> commentData) {
         Boolean permission = jdbcTemplate.queryForObject("""
-                    select exists (select 1 from roles where user_id=? and workspace_id=? and role_name='admin')
-                """, Boolean.class, userId, workspaceId);
-        Boolean permission2 = jdbcTemplate.queryForObject("""
-                    select exists (select 1 from pending_approvals as pa where user_id=? and appr_id=?)
-                """, Boolean.class, userId, approvalId);
-        Boolean permission3 = jdbcTemplate.queryForObject("""
-                    select exists (select 1 from approval_rounds as ar where id=? and user_id=?)
-                """, Boolean.class, approvalId, userId);
+            select (
+                exists (select 1 from roles where user_id=? and workspace_id=? and role_name='admin')
+                or exists (select 1 from pending_approvals where user_id=? and appr_id=?)
+                or exists (select 1 from approval_rounds where id=? and user_id=?)
+            )
+            """, Boolean.class, userId, workspaceId, userId, approvalId, approvalId, userId);
 
-        if (permission || permission2 || permission3) {
+        if (permission) {
             jdbcTemplate.update("""
                     insert into comments (user_id, appr_id, comment) values (?, ?, ?)
                     """, userId, approvalId, commentData.get("comment"));

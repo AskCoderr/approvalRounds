@@ -281,11 +281,11 @@ addLevel.addEventListener('click', (event) => {
                     <label class="form-check-label" for="inlineRadio${numChild+1}a">series</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions${numChild+1}" id="inlineRadio${numChild+1}b" value="parallel (any)">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions${numChild+1}" id="inlineRadio${numChild+1}b" value="parallel_any">
                     <label class="form-check-label" for="inlineRadio${numChild+1}b">parallel (any)</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions${numChild+1}" id="inlineRadio${numChild+1}c" value="parallel (all)">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions${numChild+1}" id="inlineRadio${numChild+1}c" value="parallel_all">
                     <label class="form-check-label" for="inlineRadio${numChild+1}c">parallel (all)</label>
                 </div>
                 <button type="button" class="btn btn-danger btn-sm delete-level"><i class="fa-regular fa-trash-can"></i></button>

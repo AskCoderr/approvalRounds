@@ -26,4 +26,5 @@ const upload = multer({
   })
 });
 
+export { s3 };
 export default upload;

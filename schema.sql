@@ -4,7 +4,7 @@ create type user_role as enum ('admin', 'approvalCreator', 'editRoles', 'removeU
 
 create table workspaces (
     id serial primary key,
-    name varchar(100) not null,
+    name varchar(100) not null
 );
 
 create table users (

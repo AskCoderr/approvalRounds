@@ -13,7 +13,7 @@ public class UserService {
     private final JdbcTemplate jdbcTemplate;
 
     public void createUser(Map<String, Object> body) {
-        jdbcTemplate.update("insert into users (email, first_name, last_name) values (?, ?, ?)", (String) body.get("email"), (String) body.get("firstName"), (String) body.get("lastName"));
+        jdbcTemplate.update("insert into users (email, first_name, last_name) values (?, ?, ?) on conflict (email) do nothing", (String) body.get("email"), (String) body.get("firstName"), (String) body.get("lastName"));
     }
 
     public Integer getId(String email) {

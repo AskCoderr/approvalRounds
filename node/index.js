@@ -9,7 +9,7 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 
-import upload from './upload.js';
+import upload, { s3 } from './upload.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -282,7 +282,7 @@ app.post('/workspace/:workspaceId/pending-approvals/:approvalId', async (req, re
     const workspaceId = req.params.workspaceId;
     const approvalId = req.params.approvalId;
     const status = req.body.status;
-    const nodeId = req.body.node_id;
+    const nodeId = Number(req.body.node_id);
 
     // done
     try {

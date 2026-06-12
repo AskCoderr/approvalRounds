@@ -1,5 +1,6 @@
 package com.example.springboot.service;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +45,18 @@ public class WorkspaceService {
         jdbcTemplate.update("insert into roles (user_id, workspace_id, role_name) values (?, ?, 'member')", userId, workspaceId);
         jdbcTemplate.update("insert into roles (user_id, workspace_id, role_name) values (?, ?, 'admin')", userId, workspaceId);
         
-        // assign member privileges to each email if it exists
-        String[] emails = ((String) createWorkspaceData.get("members")).split("\\s*,\\s*");
-        try {
-            java.sql.Array emailArray = jdbcTemplate.getDataSource().getConnection().createArrayOf("text", emails);
-            jdbcTemplate.update("insert into roles (user_id, workspace_id, role_name) select id, ?, 'member' from users where email=ANY(?)", workspaceId, emailArray);
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to create email array", e);
+        
+        // createWorkspace:
+        String membersRaw = (String) createWorkspaceData.get("members");
+        if (membersRaw != null && !membersRaw.isBlank()) {
+            String[] emails = membersRaw.split("\\s*,\\s*");
+            // assign member privileges to each email if it exists
+            try (Connection conn = jdbcTemplate.getDataSource().getConnection()) {
+                java.sql.Array emailArray = conn.createArrayOf("text", emails);
+                jdbcTemplate.update("insert into roles (user_id, workspace_id, role_name) select id, ?, 'member' from users where email=ANY(?)", workspaceId, emailArray);
+            } catch (SQLException e) {
+                throw new RuntimeException("Failed to create email array", e);
+            }
         }
     }
 
@@ -102,7 +108,7 @@ public class WorkspaceService {
 
         if (hasAccess) {
             List<Map<String, Object>> response = jdbcTemplate.queryForList("""
-                select u.id, u.first_name, u.first_name || ' ' || u.last_name as user_name, email from users as u
+                select distinct u.id, u.first_name, u.first_name || ' ' || u.last_name as user_name, u.email from users as u
                 inner join roles as r on u.id = r.user_id where r.workspace_id=?
             """, workspaceId);
             
@@ -124,12 +130,16 @@ public class WorkspaceService {
                 """, Boolean.class, userId, workspaceId);
 
         if (permission) {
-            String[] emails = ((String) body.get("users")).split("\\s*,\\s*");
-            try {
-                java.sql.Array emailArray = jdbcTemplate.getDataSource().getConnection().createArrayOf("text", emails);
-                jdbcTemplate.update("insert into roles (user_id, workspace_id, role_name) select id, ?, 'member' from users where email=ANY(?)", workspaceId, emailArray);
-            } catch (SQLException e) {
-                throw new RuntimeException("Failed to create email array", e);
+            // addUsers:
+            String usersRaw = (String) body.get("users");
+            if (usersRaw != null && !usersRaw.isBlank()) {
+                String[] emails = usersRaw.split("\\s*,\\s*");
+                try (Connection conn = jdbcTemplate.getDataSource().getConnection()) {
+                    java.sql.Array emailArray = conn.createArrayOf("text", emails);
+                    jdbcTemplate.update("insert into roles (user_id, workspace_id, role_name) select id, ?, 'member' from users where email=ANY(?)", workspaceId, emailArray);
+                } catch (SQLException e) {
+                    throw new RuntimeException("Failed to create email array", e);
+                }
             }
         } else {
             throw new ForbiddenException("Access Denied");
@@ -181,7 +191,7 @@ public class WorkspaceService {
             List<String> roles = (List<String>) body.get("roles");
             for (String role: roles) {
                 jdbcTemplate.update("""
-                    insert into roles (user_id, workspace_id, role_name) values (?, ?, ?)
+                    insert into roles (user_id, workspace_id, role_name) values (?, ?, ?::user_role)
                 """, editUserId, workspaceId, role);
             }
         } else {

@@ -44,7 +44,7 @@ public class RoundService {
                 """, Boolean.class, approvalId, userId);
         if (isAdmin || isCreator) {
             List<Map<String, Object>> levels = jdbcTemplate.queryForList("""
-                select id, status, type from level_data where appr_id=?
+                select id, status, type from level_data where appr_id=? order by level
             """, approvalId);
             for (Map<String, Object> level: levels) {
                 List<Map<String, Object>> nodes = jdbcTemplate.queryForList("""
@@ -85,10 +85,19 @@ public class RoundService {
                 values (?, ?, ?, ?, ?) returning id
                     """, Integer.class, userId, workspaceId, (String) data.get("title"), (String) data.get("subject"), (String) data.get("body"));
                 
+            List<Map<String, Object>> files = (List<Map<String, Object>>) data.get("files");
+            if (files != null) {
+                for (Map<String, Object> file : files) {
+                    jdbcTemplate.update("""
+                        insert into files (appr_id, file_url, original_name) values (?, ?, ?)
+                    """, approvalId, (String) file.get("url"), (String) file.get("name"));
+                }
+            }
+
             int count = 1;
             for (Map<String, Object> level: (List<Map<String, Object>>) data.get("levels")) {
                 Integer levelId = jdbcTemplate.queryForObject("""
-                    insert into level_data (appr_id, level, type) values (?, ?, ?) returning id
+                    insert into level_data (appr_id, level, type) values (?, ?, ?::level_type) returning id
                     """, Integer.class, approvalId, count, (String) level.get("type"));
                 String[] emails = ((String) level.get("members")).split("\\s*,\\s*");
                 int nodeCount = 1;
@@ -101,6 +110,29 @@ public class RoundService {
                 }
                 count++;
                 }
+
+            // get first level
+            Map<String, Object> firstLevel = jdbcTemplate.queryForMap("""
+                select id, type from level_data where appr_id=? and level=1
+            """, approvalId);
+
+            Integer firstLevelId = (Integer) firstLevel.get("id");
+            String firstLevelType = (String) firstLevel.get("type");
+
+            if (firstLevelType.equals("series")) {
+                // add only first node
+                jdbcTemplate.update("""
+                    insert into pending_approvals (appr_id, user_id, node_id)
+                    select ?, user_id, id from node_data
+                    where level_data_id=? order by node_order limit 1
+                """, approvalId, firstLevelId);
+            } else {
+                // parallel_any or parallel_all — add all nodes
+                jdbcTemplate.update("""
+                    insert into pending_approvals (appr_id, user_id, node_id)
+                    select ?, user_id, id from node_data where level_data_id=?
+                """, approvalId, firstLevelId);
+            }
         } else {
             throw new ForbiddenException("Access Denied");
         }

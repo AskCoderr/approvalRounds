@@ -16,6 +16,8 @@ container.addEventListener('click', (event) => {
         workspaceEditMenu.style.display = 'block';
     } else if (event.target.matches('.add-workspace-button')) {
         overlay.style.display = 'block';
+    } else if (event.target.closest('.items')) {
+        window.location.href = `/workspace/${event.target.closest('.items').dataset.workspaceId}/pending-approvals`;
     }
 });
 
