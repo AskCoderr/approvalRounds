@@ -265,7 +265,7 @@ app.get('/workspace/:workspaceId/pending-approvals/:apprId', async (req, res) =>
 
     let response;
     try {
-        response = await axios.get(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval/${apprId}`, {
+        response = await axios.get(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/pending-approvals/${apprId}`, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
             }
@@ -282,11 +282,12 @@ app.post('/workspace/:workspaceId/pending-approvals/:approvalId', async (req, re
     const workspaceId = req.params.workspaceId;
     const approvalId = req.params.approvalId;
     const status = req.body.status;
+    const nodeId = req.body.node_id;
 
-    // come-back to this later
+    // done
     try {
-        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval/${approvalId}`, 
-            {status: status}, {
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/pending-approvals/${approvalId}`, 
+            {status: status, node_id: nodeId}, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
             }
@@ -304,7 +305,7 @@ app.post('/workspace/:workspaceId/pending-approvals/:approvalId/comments', async
     const comment = req.body.comment;
     // done
     try {
-        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/approval/${approvalId}/comments`, 
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/pending-approvals/${approvalId}/comments`, 
             {comment: comment}, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
@@ -682,7 +683,7 @@ app.post('/workspace/:workspaceId/users', async (req, res) => {
 });
 
 app.delete('/workspace/:workspaceId/users/:userId', async (req, res) => {
-    // 
+    // done
     const workspaceId = req.params.workspaceId;
     const userId = req.params.userId;
     let fileResponse;
@@ -714,11 +715,12 @@ app.delete('/workspace/:workspaceId/users/:userId', async (req, res) => {
 });
 
 app.post('/workspace/:workspaceId/users/:userId/roles', async (req, res) => {
+    // done
     const workspaceId = req.params.workspaceId;
     const userId = req.params.userId;
 
     try {
-        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${userId}/workspace/${workspaceId}/roles`, {roles: req.body.roles}, {
+        await axios.post(`${process.env.SPRINGBOOT_URL}/api/users/${req.session.user.id}/workspace/${workspaceId}/users/${userId}/roles`, {roles: req.body.roles}, {
             headers: {
                 'Authorization': `Bearer ${req.session.accessToken}`
             }

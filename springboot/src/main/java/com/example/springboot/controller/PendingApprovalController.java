@@ -27,15 +27,14 @@ public class PendingApprovalController {
         return pendingApprovalService.getPendingApprovals(userId, workspaceId);
     }
 
-
     @GetMapping("/{approvalId}")
     public Map<String, Object> getPendingApproval(@PathVariable Integer userId, @PathVariable Integer workspaceId, @PathVariable Integer approvalId) {
         return pendingApprovalService.getPendingApproval(userId, workspaceId, approvalId);
     }
 
     @PostMapping("/{approvalId}")
-    public ResponseEntity<Void> approveRejectApproval(@PathVariable Integer userId, @PathVariable Integer workspaceId, @PathVariable Integer approvalId) {
-        // come back to this later
+    public ResponseEntity<Void> approveRejectApproval(@PathVariable Integer userId, @PathVariable Integer workspaceId, @PathVariable Integer approvalId, @RequestBody Map<String, Object> body) {
+        pendingApprovalService.approveRejectApproval(userId, workspaceId, approvalId, body);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

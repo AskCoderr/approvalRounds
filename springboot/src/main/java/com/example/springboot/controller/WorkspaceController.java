@@ -80,4 +80,10 @@ public class WorkspaceController {
     public List<Map<String, Object>> getUserRedundantFiles(@PathVariable Integer userId, @PathVariable Integer workspaceId, @PathVariable Integer deleteUserId) {
         return workspaceService.getUserRedundantFiles(userId, workspaceId, deleteUserId);
     }
+
+    @PostMapping("/{workspaceId}/users/{editUserId}/roles")
+    public ResponseEntity<Void> updateRoles(@PathVariable Integer userId, @PathVariable Integer workspaceId, @PathVariable Integer editUserId, @RequestBody Map<String, Object> body) {
+        workspaceService.updateRoles(userId, workspaceId, editUserId, body);
+        return ResponseEntity.ok().build();
+    }
 }

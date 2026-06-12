@@ -166,4 +166,26 @@ public class WorkspaceService {
             throw new ForbiddenException("Access Denied");
         }
     }
+
+    @Transactional
+    public void updateRoles(Integer userId, Integer workspaceId, Integer editUserId, Map<String, Object> body) {
+        Boolean permission = jdbcTemplate.queryForObject("""
+            select (exists (select 1 from roles where user_id=? and workspace_id=? and role_name in ('admin', 'editRoles')))
+            and (exists (select 1 from roles where user_id=? and workspace_id=?))
+                """, Boolean.class, userId, workspaceId, editUserId, workspaceId);
+
+        if (permission) {
+            jdbcTemplate.update("""
+                delete from roles where user_id=? and workspace_id=? and role_name != 'member'
+                    """, editUserId, workspaceId);
+            List<String> roles = (List<String>) body.get("roles");
+            for (String role: roles) {
+                jdbcTemplate.update("""
+                    insert into roles (user_id, workspace_id, role_name) values (?, ?, ?)
+                """, editUserId, workspaceId, role);
+            }
+        } else {
+            throw new ForbiddenException("Access Denied");
+        }
+    }
 }

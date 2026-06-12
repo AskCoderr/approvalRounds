@@ -36,6 +36,7 @@ create table level_data (
 create table node_data (
     id serial primary key,
     level_data_id int references level_data(id) on delete cascade,
+    node_order int not null,
     user_id int references users(id) on delete cascade,
     status approval_status default 'pending'
 );
@@ -65,6 +66,7 @@ create table files (
 create table pending_approvals (
     id serial primary key,
     appr_id int references approval_rounds(id) on delete cascade,
+    node_id int references node_data(id) on delete cascade,
     user_id int references users(id) on delete cascade,
     arrived_at timestamp default current_timestamp
 );

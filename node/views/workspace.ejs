@@ -29,7 +29,7 @@
 
 <ul class="list-group container" data-workspace-id="<%= workspaceId %>">
   <% pendingApprovals.forEach((approval) => { %>
-    <li class="list-group-item items" data-approval-id="<%= approval.id %>">
+    <li class="list-group-item items" data-approval-id="<%= approval.id %>" data-node-id="<%= approval.node_id %>">
       
       <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1"><%= approval.title %></h5>

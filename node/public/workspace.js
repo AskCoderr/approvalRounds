@@ -14,9 +14,12 @@ const userComment = document.querySelector('.user-comment');
 
 pendingApprovalLink.classList.add('active');
 
+let currentNodeId;
+
 container.addEventListener('click', async (event) => {
     const item = event.target.closest('.items');
     if (item) {
+        currentNodeId = item.dataset.nodeId;
         approvalBox.dataset.approvalId = item.dataset.approvalId;
         attachmentsContainer.innerHTML = "";
         commentsContainer.innerHTML = "";
@@ -97,7 +100,7 @@ document.addEventListener('click', async (event) => {
     } else if (event.target.matches('.reject-confirm-btn')) {
         try {
             await axios.post(`/workspace/${container.dataset.workspaceId}/pending-approvals/${approvalBox.dataset.approvalId}`, {
-                status: "rejected"
+                status: "rejected", node_id: currentNodeId
             });
             window.location.reload();
         } catch (error) {
@@ -106,7 +109,7 @@ document.addEventListener('click', async (event) => {
     } else if (event.target.matches('.approve-confirm-btn')) {
         try {
             await axios.post(`/workspace/${container.dataset.workspaceId}/pending-approvals/${approvalBox.dataset.approvalId}`, {
-                status: "approved"
+                status: "approved", node_id: currentNodeId
             });
             window.location.reload();
         } catch (error) {

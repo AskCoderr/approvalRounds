@@ -91,11 +91,13 @@ public class RoundService {
                     insert into level_data (appr_id, level, type) values (?, ?, ?) returning id
                     """, Integer.class, approvalId, count, (String) level.get("type"));
                 String[] emails = ((String) level.get("members")).split("\\s*,\\s*");
+                int nodeCount = 1;
                 for (String email: emails) {
                     jdbcTemplate.update("""
-                        insert into node_data (level_data_id, user_id)
-                        values (?, (select id from users where email=?))
-                    """, levelId, email);
+                        insert into node_data (level_data_id, node_order, user_id)
+                        values (?, ?, (select id from users where email=?))
+                    """, levelId, nodeCount, email);
+                    nodeCount++;
                 }
                 count++;
                 }
